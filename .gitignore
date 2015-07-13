@@ -194,3 +194,12 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+# Libraries
+lib/*
+
+# Local output
+java.txt
+joda.txt
+nodatime.txt
+zdump.txt
