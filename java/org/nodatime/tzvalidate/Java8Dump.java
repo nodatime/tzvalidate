@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public final class JavaDump {
+public final class Java8Dump {
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
             System.out.println("Usage: JavaDump [zone]");
