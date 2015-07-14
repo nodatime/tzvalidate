@@ -199,9 +199,10 @@ FakesAssemblies/
 lib/*
 
 # Local output
+icu4j.txt
 java7.txt
 java8.txt
 joda.txt
 nodatime.txt
-zdump.txt
 ruby.txt
+zdump.txt
