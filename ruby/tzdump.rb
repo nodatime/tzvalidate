@@ -43,6 +43,7 @@ end
 
 # Main
 
+# TODO: This would probably benefit from using Thor, instead:
 tzs = if ARGV.empty?
         TZInfo::Timezone.all_identifiers.sort
       else
