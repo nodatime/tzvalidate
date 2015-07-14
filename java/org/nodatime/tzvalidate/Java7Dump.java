@@ -6,10 +6,6 @@ package org.nodatime.tzvalidate;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.zone.ZoneOffsetTransition;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -26,10 +22,9 @@ public final class Java7Dump {
     private static final SimpleDateFormat ZONE_NAME_FORMAT = new SimpleDateFormat("zz", Locale.US);
     private static final long START;
     private static final long END;
-
     
     static {
-        INSTANT_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+        INSTANT_FORMAT.setTimeZone(UTC);
         Calendar calendar = GregorianCalendar.getInstance(UTC);
         calendar.set(1905, 0, 1, 0, 0, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -70,9 +65,8 @@ public final class Java7Dump {
         Long now = firstTransition;
         while (now != null) {
             Date nowDate = new Date(now);
-            // TODO: Name. Can't seem to find this...
             System.out.printf("%s %s %s %s\r\n",
-                    INSTANT_FORMAT.format(now),
+                    INSTANT_FORMAT.format(nowDate),
                     printOffset(zone.getOffset(now)),
                     zone.inDaylightTime(nowDate) ? "daylight" : "standard",
                     ZONE_NAME_FORMAT.format(nowDate));

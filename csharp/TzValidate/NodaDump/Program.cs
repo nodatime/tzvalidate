@@ -11,7 +11,7 @@ using NodaTime.TimeZones;
 namespace NodaTime.TzValidate.NodaDump
 {
     /// <summary>
-    /// Dump program for Noda Time.
+    /// Dumps all the time zones from a particular NZD file in tzvalidate format.
     /// </summary>
     internal static class Program
     {

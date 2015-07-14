@@ -22,6 +22,8 @@ public final class JodaDump {
     private static final DateTimeFormatter INSTANT_FORMAT = DateTimeFormat
         .forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
         .withZone(DateTimeZone.UTC);
+    private static final DateTimeFormatter ZONE_NAME_FORMAT = DateTimeFormat
+        .forPattern("zz");
     private static final Instant START = new DateTime(1905, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
     private static final Instant END = new DateTime(2035, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
 
@@ -74,6 +76,7 @@ public final class JodaDump {
 
     private static void dumpZone(String id, DateTimeZone zone) {
         System.out.printf("%s\r\n", id);
+        DateTimeFormatter nameFormatter = ZONE_NAME_FORMAT.withZone(zone);
         long now = zone.nextTransition(START.getMillis());
         if (now == START.getMillis() || now >= END.getMillis()) {
             System.out.printf("Fixed: %s %s\r\n",
@@ -84,12 +87,11 @@ public final class JodaDump {
         while (now < END.getMillis()) {
             int standardOffset = zone.getStandardOffset(now);
             int wallOffset = zone.getOffset(now);
-            
             System.out.printf("%s %s %s %s\r\n",
                               INSTANT_FORMAT.print(now),
                               printOffset(wallOffset),
                               standardOffset == wallOffset ? "standard" : "daylight",
-                              zone.getNameKey(now));
+                              nameFormatter.print(now));
                               
             long next = zone.nextTransition(now);
             if (next <= now) {

@@ -7,18 +7,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using NodaTime;
 using NodaTime.Text;
 using NodaTime.TimeZones;
 
-namespace MungeZdump
+namespace NodaTime.TzValidate.MungeZdump
 {
-
     /// <summary>
     /// Application to run zdump on each of the zones listed in a NodaTime nzd file,
+    /// and convert the output to the tzvalidate format.
     /// </summary>
     class Program
     {

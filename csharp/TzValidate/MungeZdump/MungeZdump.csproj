@@ -7,7 +7,7 @@
     <ProjectGuid>{496D98F8-7E4D-4B9B-8C82-8DA643FA5FC0}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MungeZdump</RootNamespace>
+    <RootNamespace>NodaTime.TzValidate.MungeZdump</RootNamespace>
     <AssemblyName>MungeZdump</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

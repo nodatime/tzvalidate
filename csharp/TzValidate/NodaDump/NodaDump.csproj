@@ -7,7 +7,7 @@
     <ProjectGuid>{93F5A54A-3AB7-427A-992B-B2F554BFD8FA}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NodaTime.TzValidate</RootNamespace>
+    <RootNamespace>NodaTime.TzValidate.NodaDump</RootNamespace>
     <AssemblyName>NodaDump</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
