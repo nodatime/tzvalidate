@@ -199,6 +199,7 @@ FakesAssemblies/
 lib/*
 
 # Local output
+java7.txt
 java8.txt
 joda.txt
 nodatime.txt

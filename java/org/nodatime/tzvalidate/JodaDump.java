@@ -19,9 +19,15 @@ import org.joda.time.tz.*;
 
 public final class JodaDump {
 
+    private static final DateTimeFormatter INSTANT_FORMAT = DateTimeFormat
+        .forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        .withZone(DateTimeZone.UTC);
+    private static final Instant START = new DateTime(1905, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
+    private static final Instant END = new DateTime(2035, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
+
     private static final String[] KNOWN_FILES = { "africa", "antarctica",
-            "asia", "australasia", "backward", "etcetera", "europe",
-            "northamerica", "pacificnew", "southamerica" };
+        "asia", "australasia", "backward", "etcetera", "europe",
+        "northamerica", "pacificnew", "southamerica" };
 
     public static void main(String[] args) throws IOException {
 
@@ -66,19 +72,13 @@ public final class JodaDump {
         }
     }
 
-    private static final DateTimeFormatter INSTANT_FORMAT = DateTimeFormat
-        .forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        .withZone(DateTimeZone.UTC);
-    private static final Instant START = new DateTime(1905, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
-    private static final Instant END = new DateTime(2035, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
-
     private static void dumpZone(String id, DateTimeZone zone) {
         System.out.printf("%s\r\n", id);
         long now = zone.nextTransition(START.getMillis());
         if (now == START.getMillis() || now >= END.getMillis()) {
             System.out.printf("Fixed: %s %s\r\n",
-                printOffset(zone.getOffset(START.plus(1L))),
-                zone.getNameKey(START.getMillis() + 1L));
+                printOffset(zone.getOffset(START)),
+                zone.getShortName(START.getMillis()));
             return;
         }
         while (now < END.getMillis()) {
