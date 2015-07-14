@@ -60,7 +60,10 @@ Motivation for the format
   read as a table.
 - The transition instant is expressed in UTC and in ISO-8601 extended
   format to be as simple as possible to parse in code if desired.
-- The range of 1905-2035 is just about within the bounds that zdump supports
+- The range of 1905-2035 is just about within the bounds that zdump
+  supports. (More recent implementations appear to support earlier and
+  later dates, but we can be a bit more conservative and still have
+  a good deal of confidence.)
 
 Ideal format
 ----
