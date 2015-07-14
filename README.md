@@ -35,7 +35,12 @@ Requires:
  
 Code: `csharp/TzValidate/MungeZdump`
 
-Sample command line: `MungeZdump http://nodatime.org/tzdb/tzdb2015e.nzd ~/tzdir/etc/zdump`
+Sample command line: `mono MungeZdump.exe http://nodatime.org/tzdb/tzdb2015e.nzd ~/tzdir/etc/zdump`
+
+Note: Modern `zdump` doesn't output anything useful when asked for verbose output for a fixed zone like "EST".
+There are awkward ways around this, but they really are annoying. More work needed. (It's also annoying that
+we can't easily run this on Windows, as far as I can tell. It makes testing all of this somewhat painful. Oh,
+and it's also really slow, at least the way we're doing it...)
 
 Java 7
 ----
