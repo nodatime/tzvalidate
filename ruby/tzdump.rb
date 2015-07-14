@@ -30,12 +30,15 @@ def dump_zone(console, id)
   end
 end
 
+
+tzs = if ARGV.empty?
+        TZInfo::Timezone.all_identifiers.sort
+      else
+        ARGV[0]
+      end
+
 console = IO.new(STDOUT.fileno, mode: 'w', universal_newline: true)
-if ARGV.empty?
-  for id in TZInfo::Timezone.all_identifiers.sort
-    dump_zone(console, id)
-    console.write "\r\n"
-  end
-else
-  dump_zone(console, ARGV[0])
+tzs.each do |id|
+  dump_zone(console, id)
+  console.write "\r\n"
 end
