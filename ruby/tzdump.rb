@@ -7,6 +7,11 @@ require 'tzinfo'
 START_UTC = DateTime.new(1905, 1, 1, 0, 0, 0, '+0')
 END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, '+0')
 
+def puts_crlf(*messages)
+  $stdout.write(messages.join("\r\n"))
+  $stdout.write("\r\n")
+end
+
 def format_offset(offset)
   sign = offset < 0 ? "-" : "+"
   offset = offset.abs
@@ -14,22 +19,24 @@ def format_offset(offset)
 end
 
 def dump_zone(id)
-  $stdout.write "#{id}\r\n"
+  puts_crlf "#{id}"
   zone = TZInfo::Timezone.get(id)
   period = zone.period_for_utc(START_UTC)
+
   if (period.end_transition.nil? || period.end_transition.at > END_UTC)
-    $stdout.write "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}\r\n"
+    puts_crlf "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
   else
     while !period.end_transition.nil? && period.end_transition.at < END_UTC
       period = zone.period_for_utc(period.end_transition.at)
       start = period.start_transition.at.to_datetime
       formatted_start = start.strftime("%Y-%m-%dT%H:%M:%SZ")
       formatted_offset = format_offset(period.offset.utc_total_offset)
-      $stdout.write "#{formatted_start} #{formatted_offset} #{period.dst? ? "daylight" : "standard"} #{period.offset.abbreviation}\r\n"
+      puts_crlf "#{formatted_start} #{formatted_offset} #{period.dst? ? "daylight" : "standard"} #{period.offset.abbreviation}"
     end
   end
 end
 
+# Main
 
 tzs = if ARGV.empty?
         TZInfo::Timezone.all_identifiers.sort
@@ -39,5 +46,5 @@ tzs = if ARGV.empty?
 
 tzs.each do |id|
   dump_zone(id)
-  $stdout.write "\r\n"
+  puts_crlf
 end
