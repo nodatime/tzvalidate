@@ -1,5 +1,9 @@
 #!/usr/bin/env ruby
 
+# To avoid having to run with `bundle exec $0`
+require 'rubygems'
+require 'bundler/setup'
+
 require 'tzinfo'
 
 # Constants
@@ -76,10 +80,6 @@ end
 # Main
 
 # TODO: This would probably benefit from using Thor, instead:
-tzs = if ARGV.empty?
-        TZInfo::Timezone.all_identifiers.sort
-      else
-        ARGV[0]
-      end
+tzs = ARGV.empty? ? TZInfo::Timezone.all_identifiers.sort : ARGV[0]
 
 tzs.each {|tz_id| Zone.new(tz_id).dump }
