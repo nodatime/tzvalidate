@@ -7,37 +7,69 @@ require 'tzinfo'
 START_UTC = DateTime.new(1905, 1, 1, 0, 0, 0, '+0')
 END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, '+0')
 
-def puts_crlf(*messages)
-  $stdout.write(messages.join("\r\n"))
-  $stdout.write("\r\n")
-end
+module CrLf
+  # Over-engineered, perhaps:
+  def self.output
+    @output ||= $stdout
+  end
 
-def format_offset(offset)
-  sign = offset < 0 ? "-" : "+"
-  offset = offset.abs
-  return '%s%02d:%02d:%02d' % [sign, offset / 3600, (offset / 60) % 60, offset % 60]
-end
+  def self.output=(fh)
+    @output = fh
+  end
 
-def dump_period(period, zone)
-  # TODO: I feel like this could be moved to some iterator, but it's fairly readable as-is:
-  while !period.end_transition.nil? && period.end_transition.at < END_UTC
-    period = zone.period_for_utc(period.end_transition.at)
-    start = period.start_transition.at.to_datetime
-    formatted_start = start.strftime("%Y-%m-%dT%H:%M:%SZ")
-    formatted_offset = format_offset(period.offset.utc_total_offset)
-    puts_crlf "#{formatted_start} #{formatted_offset} #{period.dst? ? "daylight" : "standard"} #{period.offset.abbreviation}"
+  def self.puts(*messages)
+    output.write(messages.join("\r\n"))
+    output.write("\r\n")
   end
 end
 
-def dump_zone(id)
-  puts_crlf "#{id}"
-  zone = TZInfo::Timezone.get(id)
-  period = zone.period_for_utc(START_UTC)
 
-  if (period.end_transition.nil? || period.end_transition.at > END_UTC)
-    puts_crlf "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
-  else
-    dump_period(period, zone)
+class Zone
+  attr_reader :tz_id
+
+  def initialize(tz_id)
+    @tz_id = tz_id
+  end
+
+  def zone
+    @zone ||= TZInfo::Timezone.get(tz_id)
+  end
+
+  def period
+    @period ||= zone.period_for_utc(START_UTC)
+  end
+
+  def each
+    return enum_for(:each) unless block_given?
+
+    p = period
+    yield p = zone.period_for_utc(p.end_transition.at) while !p.end_transition.nil? && p.end_transition.at < END_UTC
+  end
+
+  def dump
+    CrLf.puts "#{tz_id}"
+
+    if (period.end_transition.nil? || period.end_transition.at > END_UTC)
+      CrLf.puts "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
+
+    else
+      each do |p|
+        formatted_start = p.start_transition.at.to_datetime.strftime("%Y-%m-%dT%H:%M:%SZ")
+        formatted_offset = format_offset(p.offset.utc_total_offset)
+
+        CrLf.puts "#{formatted_start} #{formatted_offset} #{p.dst? ? "daylight" : "standard"} #{p.offset.abbreviation}"
+      end
+    end
+
+    CrLf.puts
+  end
+
+  private
+
+  def format_offset(offset)
+    sign = offset < 0 ? "-" : "+"
+    offset = offset.abs
+    return '%s%02d:%02d:%02d' % [sign, offset / 3600, (offset / 60) % 60, offset % 60]
   end
 end
 
@@ -50,7 +82,4 @@ tzs = if ARGV.empty?
         ARGV[0]
       end
 
-tzs.each do |id|
-  dump_zone(id)
-  puts_crlf
-end
+tzs.each {|tz_id| Zone.new(tz_id).dump }
