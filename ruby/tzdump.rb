@@ -8,8 +8,8 @@ require "tzinfo"
 
 # Constants
 
-START_UTC = DateTime.new(1905, 1, 1, 0, 0, 0, '+0')
-END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, '+0')
+START_UTC = DateTime.new(1905, 1, 1, 0, 0, 0, "+0")
+END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, "+0")
 
 # This is a simple wrapper for $stdout.write in-order to force CRLF line-endings for STOOUT
 module CrLf
