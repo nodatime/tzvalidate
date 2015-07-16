@@ -55,10 +55,10 @@ def each_period(period, zone)
   end
 end
 
-def dump_zone(id)
-  CrLf.puts "#{id}"
+def dump_zone(tz_id)
+  CrLf.puts "#{tz_id}"
 
-  zone = TZInfo::Timezone.get(id)
+  zone = TZInfo::Timezone.get(tz_id)
   period = zone.period_for_utc(START_UTC)
 
   # NB: This feels clumsy:
@@ -75,4 +75,4 @@ end
 
 # TODO: This would probably benefit from using Thor, instead:
 tzs = ARGV.empty? ? TZInfo::Timezone.all_identifiers.sort : ARGV[0]
-tzs.each {|id| dump_zone(id) }
+tzs.each {|tz_id| dump_zone(tz_id) }
