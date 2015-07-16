@@ -34,27 +34,38 @@ def format_offset(offset)
   "%s%02d:%02d:%02d" % [sign, offset / 3600, (offset / 60) % 60, offset % 60]
 end
 
-def dump_period(period, zone)
-  # TODO: I feel like this could be moved to some iterator, but that would mean refactoring into classes:
+def print_fixed_period(period)
+  CrLf.puts "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
+end
+
+def print_single_period(period)
+  start = period.start_transition.at.to_datetime
+  formatted_start = start.strftime("%Y-%m-%dT%H:%M:%SZ")
+  formatted_offset = format_offset(period.offset.utc_total_offset)
+  dst_name = period.dst? ? "daylight" : "standard"
+
+  CrLf.puts "#{formatted_start} #{formatted_offset} #{dst_name} #{period.offset.abbreviation}"
+end
+
+def each_period(period, zone)
+  # NB: I feel like this could be moved to some iterator, but that would mean refactoring into classes:
   while !period.end_transition.nil? && period.end_transition.at < END_UTC
     period = zone.period_for_utc(period.end_transition.at)
-    start = period.start_transition.at.to_datetime
-    formatted_start = start.strftime("%Y-%m-%dT%H:%M:%SZ")
-    formatted_offset = format_offset(period.offset.utc_total_offset)
-
-    CrLf.puts "#{formatted_start} #{formatted_offset} #{period.dst? ? "daylight" : "standard"} #{period.offset.abbreviation}"
+    yield period
   end
 end
 
 def dump_zone(id)
   CrLf.puts "#{id}"
+
   zone = TZInfo::Timezone.get(id)
   period = zone.period_for_utc(START_UTC)
 
+  # NB: This feels clumsy:
   if period.end_transition.nil? || period.end_transition.at > END_UTC
-    CrLf.puts "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
+    print_fixed_period(period)
   else
-    dump_period(period, zone)
+    each_period(period, zone) {|p| print_single_period(p) }
   end
 
   CrLf.puts
