@@ -1,24 +1,23 @@
 #!/usr/bin/env ruby
 
-# To avoid having to run with `bundle exec $0`
-require 'rubygems'
-require 'bundler/setup'
+## TODO:  Add some TL doc's!
 
-require 'tzinfo'
+# To avoid having to run with `bundle exec $0`
+require "rubygems"
+require "bundler/setup"
+
+require "tzinfo"
 
 # Constants
 
-START_UTC = DateTime.new(1905, 1, 1, 0, 0, 0, '+0')
-END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, '+0')
+START_UTC = DateTime.new(1905, 1, 1, 0, 0, 0, "+0")
+END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, "+0")
 
+# This is a simple wrapper for $stdout.write in-order to force CRLF line-endings for STOOUT
 module CrLf
   # Over-engineered, perhaps:
-  def self.output
-    @output ||= $stdout
-  end
-
-  def self.output=(fh)
-    @output = fh
+  def self.console
+    @console ||= IO.new($stdout.fileno, mode: "w", universal_newline: true)
   end
 
   def self.puts(*messages)
@@ -27,7 +26,7 @@ module CrLf
   end
 end
 
-
+# This is a dumper class for the TZInfo data
 class Zone
   attr_reader :tz_id
 
@@ -53,7 +52,7 @@ class Zone
   def dump
     CrLf.puts "#{tz_id}"
 
-    if (period.end_transition.nil? || period.end_transition.at > END_UTC)
+    if period.end_transition.nil? || period.end_transition.at > END_UTC
       CrLf.puts "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
 
     else
@@ -61,7 +60,7 @@ class Zone
         formatted_start = p.start_transition.at.to_datetime.strftime("%Y-%m-%dT%H:%M:%SZ")
         formatted_offset = format_offset(p.offset.utc_total_offset)
 
-        CrLf.puts "#{formatted_start} #{formatted_offset} #{p.dst? ? "daylight" : "standard"} #{p.offset.abbreviation}"
+        CrLf.puts "#{formatted_start} #{formatted_offset} #{p.dst? ? 'daylight' : 'standard'} #{p.offset.abbreviation}"
       end
     end
 
@@ -73,7 +72,8 @@ class Zone
   def format_offset(offset)
     sign = offset < 0 ? "-" : "+"
     offset = offset.abs
-    return '%s%02d:%02d:%02d' % [sign, offset / 3600, (offset / 60) % 60, offset % 60]
+
+    "%s%02d:%02d:%02d".format(sign, offset / 3600, (offset / 60) % 60, offset % 60)
   end
 end
 
