@@ -51,7 +51,7 @@ def dump_zone(id)
   zone = TZInfo::Timezone.get(id)
   period = zone.period_for_utc(START_UTC)
 
-  if (period.end_transition.nil? || period.end_transition.at > END_UTC)
+  if period.end_transition.nil? || period.end_transition.at > END_UTC
     CrLf.puts "Fixed: #{format_offset(period.offset.utc_total_offset)} #{period.offset.abbreviation}"
   else
     dump_period(period, zone)
