@@ -15,14 +15,15 @@ END_UTC = DateTime.new(2035, 1, 1, 0, 0, 0, "+0")
 
 # This is a simple wrapper for $stdout.write in-order to force CRLF line-endings for STOOUT
 module CrLf
+  attr_writer :console
   # Over-engineered, perhaps:
   def self.console
     @console ||= IO.new($stdout.fileno, mode: "w", universal_newline: true)
   end
 
   def self.puts(*messages)
-    output.write(messages.join("\r\n"))
-    output.write("\r\n")
+    console.write(messages.join("\r\n"))
+    console.write("\r\n")
   end
 end
 
