@@ -27,12 +27,15 @@ namespace NodaTime.TzValidate.MungeZdump
         // Sample line:
         // Europe/Paris  Sun Oct 27 00:59:59 2019 UT = Sun Oct 27 02:59:59 2019 CEST isdst=1 gmtoff=7200
         private static readonly Regex LineRegex = new Regex(@"^[^ ]*  (?<utc>.*) UT = (?<local>.*\d\d\d\d) (?<name>[^ ]*) isdst=(?<isdst>.) gmtoff=(?<gmtoff>[-\d]*)$");
+        // Sample line:
+        // Etc/GMT+1  Fri Jul 17 14:15:04 2015 GMT+1
+        private static readonly Regex FixedLineRegex = new Regex(@"^[^ ]*  (?<local>.*\d\d\d\d) (?<name>.*)$");
 
         static void Main(string[] args)
         {
-            if (args.Length != 2)
+            if (args.Length < 2 || args.Length > 3)
             {
-                Console.WriteLine("Usage: NodaDump <source> <path to zdump or text file>");
+                Console.WriteLine("Usage: NodaDump <source> <path to zdump or text file> [zoneinfo directory]");
                 Console.WriteLine("The source may be a local nzd file, or a URL, e.g. http://nodatime.org/tzdb/tzdb2015e.nzd");
                 Console.WriteLine("If the path ends with .txt, it is assumed to be a text file with the output of zdump, for testing");
                 return;
@@ -41,25 +44,53 @@ namespace NodaTime.TzValidate.MungeZdump
             var source = TzdbDateTimeZoneSource.FromStream(new MemoryStream(sourceData));
             var provider = new DateTimeZoneCache(source);
 
+            var zoneInfoRoot = "";
+
+            if (args.Length == 3)
+            {
+                string directory = args[2];
+                if (!Directory.Exists(directory))
+                {
+                    Console.WriteLine($"{directory} does not exist as a directory");
+                }
+                zoneInfoRoot = new DirectoryInfo(directory).FullName + "/";
+            }
+
             if (args[1].EndsWith(".txt"))
             {
-                DumpZone("Loaded from text file", File.ReadAllLines(args[1]));
+                DumpZone(File.ReadAllLines(args[1]));
             }
             else
             {
                 // Ids is already sorted
                 foreach (var id in provider.Ids)
                 {
-                    var lines = RunZdump(id, args[1]);
-                    DumpZone(id, lines);
+                    Console.Write("{0}\r\n", id);
+                    var lines = RunZdump(args[1], "-v -c 2036 " + zoneInfoRoot + id);
+                    // Actually 4 lines for a totally fixed zone, but we see 5 due to the empty one.
+                    // It's skipped as we only take even lines anyway.
+                    if (lines.Count > 5)
+                    {
+                        DumpZone(lines);
+                    }
+                    else
+                    {
+                        lines = RunZdump(args[1], zoneInfoRoot + id);
+                        DumpFixedZone(lines[0]);
+                    }
                     Console.Write("\r\n");
                 }
             }
         }
 
-        private static void DumpZone(string id, IEnumerable<string> lines)
+        /// <summary>
+        /// Dumps a single zone, given lines from zdump or a text file.
+        /// </summary>
+        /// <param name="id">The time zone ID</param>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        private static void DumpZone(IEnumerable<string> lines)
         {
-            Console.Write("{0}\r\n", id);
             // There's a before/on pair for each transition. We only want the "on" line.
             // Additionally, skip the first pair which just gives the earliest known transition.
             var lineList = lines.Where((value, index) => index % 2 == 1).Skip(1).ToList();
@@ -115,22 +146,40 @@ namespace NodaTime.TzValidate.MungeZdump
                 }
                 else
                 {
-                    // Hmm. Must be a very fixed zone, like "EST". No lines at all...
-                    // We could potentially rerun zdump at this point, without -v,
-                    // and work out the difference between UTC and local time. But icky...
-                    Console.Write("Fixed: Unknown offset");
+                    throw new Exception("Unable to find any lines of data...");
                 }
             }
         }
 
-        private static IEnumerable<string> RunZdump(string id, string zdump)
+        private static void DumpFixedZone(string line)
+        {
+            var match = FixedLineRegex.Match(line);
+            if (!match.Success)
+            {
+                throw new Exception("Invalid line: " + line);
+            }
+            var local = LocalPattern.Parse(match.Groups["local"].Value.Replace("  ", " ")).Value;
+            var name = match.Groups["name"].Value;
+            var now = SystemClock.Instance.Now;
+            var offsetAsDuration = local.InUtc().ToInstant() - now;
+            var minutes = offsetAsDuration.Ticks / (double) NodaConstants.TicksPerMinute;
+            // Round it to the nearest minute.
+            var roundedTicks = (long) (Math.Round(minutes) * NodaConstants.TicksPerMinute);
+            var offset = Offset.FromTicks(roundedTicks);
+
+            Console.Write("Fixed: {0} {1}\r\n",
+                OffsetPattern.Format(offset),
+                name);
+        }
+
+        private static List<string> RunZdump(string zdump, string arguments)
         {
             var info = new ProcessStartInfo
-            {
+            {                
                 FileName = zdump,
                 // Deliberately to the start of time, so that for fixed zones we still
                 // see a transition in most cases.
-                Arguments = "-v -c 2036 " + id,
+                Arguments = arguments,
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
