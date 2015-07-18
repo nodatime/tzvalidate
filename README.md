@@ -8,21 +8,17 @@ appropriate generation tools etc will be required. Initially, all code within
 this repository should be seen as highly experimental, and likely to be hacked
 together with little thought to longevity.
 
+Data
+====
+
+I'm temporarily hosting data sourced from `zic`/`zdump` (which I view as canonical)
+at http://nodatime.org/tzvalidate. You can download a zip file of each release you're
+interested in, or one containing everything we've got.
+
 Current implementations and requirements
 ====
 
-Noda Time
-----
-
-Loads an existing nzd (Noda Zone Data) file and reports transitions.
-
-Code: `csharp/TzValidate/NodaDump`
-
-Requires: Noda Time (restore nuget package on solution)
-
-Sample command line: `NodaDump http://nodatime.org/tzdb/tzdb2015e.nzd`
-
-zdump
+zic/zdump
 ----
 
 In the `scripts` directory is a `dumpall.sh` script which can be pointed at a `zic` output directory
@@ -40,6 +36,17 @@ Requires:
 Code: `csharp/TzValidate/ProcessZdumpOutput`
 
 Sample command line: `mono MungeZdump.exe tzdb2015e-transition.txt tzdb2015e-now.txt`
+
+Noda Time
+----
+
+Loads an existing nzd (Noda Zone Data) file and reports transitions.
+
+Code: `csharp/TzValidate/NodaDump`
+
+Requires: Noda Time (restore nuget package on solution)
+
+Sample command line: `NodaDump http://nodatime.org/tzdb/tzdb2015e.nzd`
 
 Java 7
 ----
