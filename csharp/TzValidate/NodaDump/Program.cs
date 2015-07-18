@@ -51,14 +51,14 @@ namespace NodaTime.TzValidate.NodaDump
         {
             Console.Write("{0}\r\n", zone.Id);
             var zoneInterval = zone.GetZoneInterval(Start);
-            if (zoneInterval.End >= End)
+            if (!zoneInterval.HasEnd || zoneInterval.End >= End)
             {
                 Console.Write("Fixed: {0} {1}\r\n",
                     OffsetPattern.Format(zoneInterval.WallOffset),
                     zoneInterval.Name);
                 return;
             }
-            while (zoneInterval.End < End)
+            while (zoneInterval.HasEnd && zoneInterval.End < End)
             {
                 zoneInterval = zone.GetZoneInterval(zoneInterval.End);
                 Console.Write("{0} {1} {2} {3}\r\n",

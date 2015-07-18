@@ -160,7 +160,7 @@ namespace NodaTime.TzValidate.MungeZdump
             }
             var local = LocalPattern.Parse(match.Groups["local"].Value.Replace("  ", " ")).Value;
             var name = match.Groups["name"].Value;
-            var now = SystemClock.Instance.Now;
+            var now = SystemClock.Instance.GetCurrentInstant();
             var offsetAsDuration = local.InUtc().ToInstant() - now;
             var minutes = offsetAsDuration.Ticks / (double) NodaConstants.TicksPerMinute;
             // Round it to the nearest minute.
