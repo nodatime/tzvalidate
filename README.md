@@ -25,22 +25,21 @@ Sample command line: `NodaDump http://nodatime.org/tzdb/tzdb2015e.nzd`
 zdump
 ----
 
-C# code to invoke `zdump` for each time zone ID known to Noda Time, and then munge
-the output into the regular format. 
+In the `scripts` directory is a `dumpall.sh` script which can be pointed at a `zic` output directory
+to produce a pair of files - one with all the transitions between 1901 and 1936, and one with the current
+time (for the sake of fixed time zones).
+
+C# code is then available in `csharp/TzValidate/ProcessZdumpOutput` to convert a file pair into tzvalidate
+format.
 
 Requires:
 
 - A "modern" version of `zdump` to be built already, as per the IANA web site.
 - Noda Time (restore nuget package on solution)
  
-Code: `csharp/TzValidate/MungeZdump`
+Code: `csharp/TzValidate/ProcessZdumpOutput`
 
-Sample command line: `mono MungeZdump.exe http://nodatime.org/tzdb/tzdb2015e.nzd ~/tzdir/etc/zdump`
-
-Note: Modern `zdump` doesn't output anything useful when asked for verbose output for a fixed zone like "EST".
-There are awkward ways around this, but they really are annoying. More work needed. (It's also annoying that
-we can't easily run this on Windows, as far as I can tell. It makes testing all of this somewhat painful. Oh,
-and it's also really slow, at least the way we're doing it...)
+Sample command line: `mono MungeZdump.exe tzdb2015e-transition.txt tzdb2015e-now.txt`
 
 Java 7
 ----
