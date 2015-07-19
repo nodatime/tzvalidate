@@ -1,0 +1,16 @@
+# Most of these are disabling existing cops, primarily
+# due to a smattering of different styles and loose
+# guidlines for contributions.
+#
+# Any of these may be changed.
+
+# I personally believe double-quotes is more-idiomatic Ruby
+StringLiterals:
+  EnforcedStyle: double_quotes
+#  Enabled: false
+
+SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: false
+
+LineLength:
+  Max: 120
