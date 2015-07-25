@@ -16,8 +16,10 @@ even if they aliases for other zones.
 The information for each zone consists of:
 
 - The zone ID (e.g. "London/Europe"
-- A line per transition strictly after 1905-01-01T00:00:00Z and
-  strictly before 2035-01-01T00:00:00Z
+- An initial line indicating the state of the time zone before the
+  first transition. This has the same format as a transition line, but
+  with `Initially:` instead of the transition instant
+- A line per transition strictly before 2035-01-01T00:00:00Z
 - A blank line
 
 Each transition line consists of:
@@ -38,15 +40,6 @@ Lines are separated by "\r\n" - the Windows default line
 separator - until such time as that becomes annoying. (It's
 convenient for me, Jon Skeet, as I mostly work on Windows...)
 
-If there are no transitions for the zone (within the range 1900-2050), a
-single line is included below the zone ID, with a format of:
-
-- The literal "Fixed: "
-- The offset, in the format above
-- The name of the zone within the period 1900-2050
-
-(It is possible that the zone isn't genuinely fixed for all time, of course -
-only within the period 1905-2035.)
 
 Motivation for the format
 ====
@@ -60,35 +53,6 @@ Motivation for the format
   read as a table.
 - The transition instant is expressed in UTC and in ISO-8601 extended
   format to be as simple as possible to parse in code if desired.
-- The range of 1905-2035 is just about within the bounds that zdump
-  supports. (More recent implementations appear to support earlier and
-  later dates, but we can be a bit more conservative and still have
-  a good deal of confidence.)
-
-Ideal format
-----
-
-Currently, there's no indication of the split between "standard
-offset" and "daylight savings"; only an indication of whether a
-transition is into standard time or daylight time. Daylight savings
-comprise 1 hour (forward) in almost all cases, but a few time zones
-(e.g. Antarctica/Troll) do not follow this pattern.
-
-The current restriction is due to the output of `zdump` - which in
-turn is due to the output of `zic` not including the amount of
-daylight savings. If we regard `zic` as the canonical implementation,
-we'd either need a new file format, a clone of the `zic` code, or
-a modified version of `zic` which optionally wrote out a text dump
-file as part of its operation.
-
-The ideal format would potentially include two offsets instead of an
-offset and "standard" or "daylight". The two offsets to represent
-could be any pair of:
-
-- Wall and standard
-- Wall and daylight
-- Standard and daylight
-
-The third value can easily be derived from the other two in any
-case, but each makes a different use case simple. We could include
-all three, at the cost of redundancy/verbosity.
+- Ending in 2035 gives reasonable confidence in validation without breaking
+  past the 2038 Unix timestamp apocalypse. In particular, `zic` appears
+  to generate data up until 2037 and then use a recurrence rule.

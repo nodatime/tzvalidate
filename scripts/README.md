@@ -19,16 +19,3 @@ If you're in the `input` directory, you can run
     ./compile.sh tzdata2015a
     
 ... to create `tzdata2015a` in the `output` directory.
-
-dumpall.sh
-----
-
-Assuming you are in a directory with zic output directories
-(tzdata2015a, tzdata2015b etc) you can run
-
-    ./dumpall.sh tzdata2015a
-    
-(for example) to create `tzdata2015a-now.txt` and
-`tzdata2015a-transition.txt`. These can then be processed by the
-`ProcessZdumpOutput` project under the `csharp` directory.
-

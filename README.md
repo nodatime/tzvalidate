@@ -20,22 +20,64 @@ Current implementations and requirements
 
 zic/zdump
 ----
+=======
+All tools support the following command line options:
 
-In the `scripts` directory is a `dumpall.sh` script which can be pointed at a `zic` output directory
-to produce a pair of files - one with all the transitions between 1901 and 1936, and one with the current
-time (for the sake of fixed time zones).
+- `-f`: The "from" year - where to start looking for transitions. Defaults to "before any
+  real transitions" (in a platform-specific way; often 1AD).
+- `-t`: The "to" year - where to stop looking for transitions. Defaults to 2035.
+- `-z`: The ID of single zone to dump, where applicable
 
-C# code is then available in `csharp/TzValidate/ProcessZdumpOutput` to convert a file pair into tzvalidate
-format.
+ The "initially" line is unaffected by the from/to year combination.
+
+Noda Time
+----
+
+The Noda Time code is now within the [Noda Time repository](https://github.com/nodatime/nodatime) to
+enable direct handling of tz data.
+
+Loads data from one of three sources:
+
+- A Noda Time nzd file (local or via http/https)
+- A tzdata directory
+- A tzdata tar.gz file (local or via http/https)
+
+Additional command line options:
+
+- `-s`: (required) source file or directory
+
+Reports initial offset and all transitions within bounds. Code exists in the main Noda Time repository,
+in order to use an assembly which isn't exported in releases.
+
+Sample command lines:
+
+- `NodaTime.TzValidate.NodaDump -s http://nodatime.org/tzdb/tzdb2015e.nzd`
+- `NodaTime.TzValidate.NodaDump -s www\tzdb\tzdb2015e.nzd`
+- `NodaTime.TzValidate.NodaDump -s data\tzdb\2015e`
+- `NodaTime.TzValidate.NodaDump -s http://www.iana.org/time-zones/repository/releases/tzdata2015e.tar.gz`
+- `NodaTime.TzValidate.NodaDump -s downloads\tzdata2015e.tar.gz`
+- `NodaTime.TzValidate.NodaDump -s http://nodatime.org/tzdb/tzdb2015e.nzd -f 1900 -t 2000`
+
+zic
+----
+
+C# code is then available in `csharp/TzValidate/ZicDump` to report
+transitions stored in the output of `zic`.
 
 Requires:
 
-- A "modern" version of `zdump` to be built already, as per the IANA web site.
-- Noda Time (restore nuget package on solution)
+- A "modern" version of `zic` to have compiled a data source already, as per the IANA web site.
  
-Code: `csharp/TzValidate/ProcessZdumpOutput`
+Code: `csharp/TzValidate/ZicDump`
 
-Sample command line: `mono MungeZdump.exe tzdb2015e-transition.txt tzdb2015e-now.txt`
+Additional command line options:
+
+- `-s`: (required) source file or directory; either a file for a single zone,
+  or a directory to be searched recursively for files
+- `-i`: (optional) whether or not to fake an initial offset for zones which don't
+  report a transition at the big bang; values are "true" or "false" - defaults to "true"
+
+Sample command line: `mono ZicDump.exe -s tzdb2015e`
 
 Noda Time
 ----
@@ -57,10 +99,11 @@ Requires:
 
 - A JRE update to the time zone database you want to use. See [the Timezone updater tool](http://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html)
 - Java 7 (it probably works with Java 1.4 or something ridiculous, but importantly it doesn't require Java 8)
+- [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) - v1.3.1 or later
 
 Code: `java/org/nodatime/tzvalidate/Java7Dump`
 
-Sample command line: `java -cp bin org.nodatime.tzvalidate.Java7Dump`
+Sample command line: `java -cp bin;lib/commons-cli-1.3.1.jar org.nodatime.tzvalidate.Java7Dump`
 
 Java 8
 ----
@@ -71,10 +114,11 @@ Requires:
 
 - A JRE update to the time zone database you want to use. See [the Timezone updater tool](http://www.oracle.com/technetwork/java/javase/tzupdater-readme-136440.html)
 - Java 8+
+- [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) - v1.3.1 or later
 
 Code: `java/org/nodatime/tzvalidate/Java8Dump`
 
-Sample command line: `java -cp bin org.nodatime.tzvalidate.Java8Dump`
+Sample command line: `java -cp bin;lib/commons-cli-1.3.1.jar org.nodatime.tzvalidate.Java8Dump`
 
 Joda Time
 ----
@@ -83,11 +127,16 @@ Uses Joda Time's built-in tz compiler to work from source data.
 
 Requires:
 
-- Joda Time of some version - probably nothing too recent, but I use 2.8.1
+- [Joda Time](http://joda.org/joda-time) of some version - probably nothing too recent, but I use 2.8.1
+- [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) - v1.3.1 or later
 
 Code: `java/org/nodatime/tzvalidate/JodaDump`
 
-Sample command line: `java -cp bin;lib/joda-time-2.8.1.jar org.nodatime.tzvalidate.JodaDump ../tzdata/2015e`
+Additional command line options:
+
+- `-s`: (required) directory containing tzdata source
+
+Sample command line: `java -cp bin;lib/joda-time-2.8.1.jar;lib/commons-cli-1.3.1.jar org.nodatime.tzvalidate.JodaDump -s ../tzdata/2015e`
 
 ICU4J
 ----
@@ -96,12 +145,13 @@ Uses the time zone database built into ICU4J.
 
 Requires:
 
-- ICU4J - probably nothing too recent, but I use 55.1
+- [ICU4J](http://site.icu-project.org/home) - probably nothing too recent, but I use 55.1
 - An updated time zone database in the jar file; see [the ICU4J Time Zone Update Utility](http://icu-project.org/download/icutzu.html) for more details.  
+- [Apache Commons CLI](https://commons.apache.org/proper/commons-cli/) - v1.3.1 or later
 
 Code: `java/org/nodatime/tzvalidate/IcuDump`
 
-Sample command line: `java -cp bin;lib/icu4j-55_1.jar org.nodatime.tzvalidate.IcuDump`
+Sample command line: `java -cp bin;lib/icu4j-55_1.jar;lib/commons-cli-1.3.1.jar org.nodatime.tzvalidate.IcuDump`
 
 Note: ICU4J appears not to have any way of getting at time zone abbreviations (PST, PDT etc). I've tried various approaches, but nothing gives
 the expected results. Improvements welcome!
@@ -115,6 +165,7 @@ Requires:
 
 - `tzinfo` gem 
 - `tzinfo-data` gem
+- `trollop` gem
 
 Code: `ruby/tzdump.rb`
 
