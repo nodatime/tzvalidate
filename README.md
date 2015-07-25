@@ -18,9 +18,6 @@ interested in, or one containing everything we've got.
 Current implementations and requirements
 ====
 
-zic/zdump
-----
-=======
 All tools support the following command line options:
 
 - `-f`: The "from" year - where to start looking for transitions. Defaults to "before any
@@ -61,8 +58,7 @@ Sample command lines:
 zic
 ----
 
-C# code is then available in `csharp/TzValidate/ZicDump` to report
-transitions stored in the output of `zic`.
+C# code is then available in `csharp/TzValidate/ZicDump` to report transitions stored in the output of `zic`.
 
 Requires:
 
@@ -78,17 +74,6 @@ Additional command line options:
   report a transition at the big bang; values are "true" or "false" - defaults to "true"
 
 Sample command line: `mono ZicDump.exe -s tzdb2015e`
-
-Noda Time
-----
-
-Loads an existing nzd (Noda Zone Data) file and reports transitions.
-
-Code: `csharp/TzValidate/NodaDump`
-
-Requires: Noda Time (restore nuget package on solution)
-
-Sample command line: `NodaDump http://nodatime.org/tzdb/tzdb2015e.nzd`
 
 Java 7
 ----

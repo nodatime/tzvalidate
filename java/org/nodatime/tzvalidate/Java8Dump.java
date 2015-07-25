@@ -53,7 +53,7 @@ public final class Java8Dump {
         System.out.printf("%s\r\n", zone.getId());
         // Instant.MIN can't be formatted, so let's just do "quite a long time ago"
         Instant early = ZonedDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
-        System.out.printf("Initially: %s\r\n", formatOffsetAndName(zone, early));
+        System.out.printf("Initially:           %s\r\n", formatOffsetAndName(zone, early));
 
         Instant start = ZonedDateTime.of(options.getFromYear(), 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
         Instant end = ZonedDateTime.of(options.getToYear(), 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();

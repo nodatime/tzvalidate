@@ -66,7 +66,7 @@ public final class Java7Dump {
         
         TimeZone zone = TimeZone.getTimeZone(id);
         ZONE_NAME_FORMAT.setTimeZone(zone);
-        System.out.printf("Initially: %s\r\n", formatOffsetAndName(zone, early));  
+        System.out.printf("Initially:           %s\r\n", formatOffsetAndName(zone, early));  
         
         Long transition = getNextTransition(zone, start - 1, end);
         Date date = new Date(); // Reused in the loop

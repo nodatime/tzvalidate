@@ -63,7 +63,7 @@ public final class IcuDump {
         calendar.set(1, 0, 1, 0, 0, 0);
         long early = calendar.getTimeInMillis();
 
-        System.out.printf("Initially: %s\r\n", formatOffsetAndName(zone, early));  
+        System.out.printf("Initially:           %s\r\n", formatOffsetAndName(zone, early));  
         
         TimeZoneTransition transition = zone.getNextTransition(start, true /* inclusive */);
         

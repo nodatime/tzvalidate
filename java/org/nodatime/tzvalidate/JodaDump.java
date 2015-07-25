@@ -87,7 +87,7 @@ public final class JodaDump {
         // Note that the ID we fetched isn't always the same as DateTimeZone.getID()
         System.out.printf("%s\r\n", id);
         DateTimeFormatter nameFormatter = ZONE_NAME_FORMAT.withZone(zone);
-        System.out.printf("Initially: %s %s %s\r\n",
+        System.out.printf("Initially:           %s %s %s\r\n",
             printOffset(zone.getOffset(Long.MIN_VALUE)),
             zone.isStandardOffset(Long.MIN_VALUE) ? "standard" : "daylight",
             zone.getShortName(Long.MIN_VALUE));

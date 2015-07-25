@@ -23,7 +23,7 @@ def dump_zone(console, id, options)
 
   # Take 1AD as "far back in history"
   initial = DateTime.new(1, 1, 1, 0, 0, 0, '+0')
-  console.write "Initially: #{format_period(zone.period_for_utc(initial))}\r\n"
+  console.write "Initially:           #{format_period(zone.period_for_utc(initial))}\r\n"
 
   # We want to use the start of periods, so we find the period containing start_utc,
   # then the period which starts at the end of that one. That way we find the first
