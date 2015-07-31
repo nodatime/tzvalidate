@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZicDump", "ZicDump\ZicDump.csproj", "{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeZoneInfoDump", "TimeZoneInfoDump\TimeZoneInfoDump.csproj", "{B521613E-A8A3-4106-8267-B31E3E0C8C0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

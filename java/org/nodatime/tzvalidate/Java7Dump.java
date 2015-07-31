@@ -93,7 +93,8 @@ public final class Java7Dump {
         long now = start + ONE_DAY_MILLIS;
         Date nowDate = new Date();
         
-        while (now < end) {
+        // Inclusive upper bound to enable us to find transitions within the last day.
+        while (now <= end) {
             nowDate.setTime(now);
             if (zone.getOffset(now) != startOffset || zone.inDaylightTime(nowDate) != startDaylight) {
                 // Right, so there's a transition strictly after now - ONE_DAY_MILLIS, and less than or equal to now. Binary search...
@@ -111,7 +112,8 @@ public final class Java7Dump {
                         lowerExclusive = candidate;
                     }
                 }
-                return upperInclusive;
+                // If we turn out to have hit the end point, we're done without a final transition. 
+                return upperInclusive == end ? null : upperInclusive;
             }
             now += ONE_DAY_MILLIS;
         }

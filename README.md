@@ -55,10 +55,21 @@ Sample command lines:
 - `NodaTime.TzValidate.NodaDump -s downloads\tzdata2015e.tar.gz`
 - `NodaTime.TzValidate.NodaDump -s http://nodatime.org/tzdb/tzdb2015e.nzd -f 1900 -t 2000`
 
+TimeZoneInfo (.NET)
+----
+
+Reports transitions in .NET's "native" `TimeZoneInfo` class. Unless you're running on a system
+using time zone data built from the IANA sources, this is unlikely to be similar to any other output
+- in particular, many zones have recurrences which effectively start in 1AD.
+
+Code: `csharp/TzValidate/TimeZoneInfoDump`
+
+Supports the regular command line options, and no additional options.
+
 zic
 ----
 
-C# code is then available in `csharp/TzValidate/ZicDump` to report transitions stored in the output of `zic`.
+C# code is available in `csharp/TzValidate/ZicDump` to report transitions stored in the output of `zic`.
 
 Requires:
 
