@@ -88,7 +88,7 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                     while (upperInclusiveTicks > lowerExclusiveTicks + 1)
                     {
                         long candidateTicks = (upperInclusiveTicks + lowerExclusiveTicks) / 2;
-                        var candidateDto = new DateTimeOffset(new DateTime(candidateTicks, DateTimeKind.Utc), TimeSpan.Zero);
+                        var candidateDto = new DateTimeOffset(candidateTicks, TimeSpan.Zero);
                         if (zone.GetUtcOffset(candidateDto) != startOffset || zone.IsDaylightSavingTime(candidateDto) != startDaylight)
                         {
                             // Still seeing a difference: look earlier
@@ -103,7 +103,7 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                     // If we turn out to have hit the end point, we're done without a final transition. 
                     return upperInclusiveTicks == end.Ticks
                         ? (DateTimeOffset?) null
-                        : new DateTimeOffset(new DateTime(upperInclusiveTicks, DateTimeKind.Utc), TimeSpan.Zero);
+                        : new DateTimeOffset(upperInclusiveTicks, TimeSpan.Zero);
                 }
                 now = now.AddDays(1);
             }
