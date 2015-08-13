@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZicDump", "ZicDump\ZicDump.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeZoneInfoDump", "TimeZoneInfoDump\TimeZoneInfoDump.csproj", "{B521613E-A8A3-4106-8267-B31E3E0C8C0C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimNames", "TrimNames\TrimNames.csproj", "{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
