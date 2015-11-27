@@ -1,0 +1,23 @@
+﻿{
+  "version": "0.0.0-*",
+  "description": "DNX-compatible version of an old https://github.com/gsscoder/commandline",
+  "authors": [ "Giacomo Stelluti Scala", "Jon Skeet" ],
+  "tags": [ "" ],
+  "projectUrl": "https://github.com/gsscoder/commandline",
+  "licenseUrl": "https://github.com/gsscoder/commandline/blob/master/License.md",
+
+  "shared": "**/*.cs",
+
+  "commands": {
+    "NodaTime.TzValidate.ZicDump": "NodaTime.TzValidate.ZicDump"
+  },
+
+  "frameworks": {
+    "net451": { },
+    "dotnet5.4": {
+      "dependencies": {
+        "System.Runtime": "4.0.21-beta-23516"
+      }
+    }
+  }
+}

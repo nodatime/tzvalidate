@@ -3,11 +3,20 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZicDump", "ZicDump\ZicDump.csproj", "{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{567D9990-61B7-429C-9580-469BEAD0BB5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeZoneInfoDump", "TimeZoneInfoDump\TimeZoneInfoDump.csproj", "{B521613E-A8A3-4106-8267-B31E3E0C8C0C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7943C99C-0E2B-494A-89F1-1BDEA1ED1AB7}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimNames", "TrimNames\TrimNames.csproj", "{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.TimeZoneInfoDump", "src\NodaTime.TzValidate.TimeZoneInfoDump\NodaTime.TzValidate.TimeZoneInfoDump.xproj", "{5743806A-02E2-4E4F-AB9B-6E2F6F4CA2F1}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.ZicDump", "src\NodaTime.TzValidate.ZicDump\NodaTime.TzValidate.ZicDump.xproj", "{13782A5D-8507-4C6B-BB32-45CF6088D227}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.TrimNames", "src\NodaTime.TzValidate.TrimNames\NodaTime.TzValidate.TrimNames.xproj", "{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.DnxCommandLine", "src\NodaTime.TzValidate.DnxCommandLine\NodaTime.TzValidate.DnxCommandLine.xproj", "{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,20 +24,30 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05372333-BC33-4BB5-BCB9-4FE92DC9FC8F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B521613E-A8A3-4106-8267-B31E3E0C8C0C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4A172CE3-BA50-409E-B60A-4DDF4950ED0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5743806A-02E2-4E4F-AB9B-6E2F6F4CA2F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5743806A-02E2-4E4F-AB9B-6E2F6F4CA2F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5743806A-02E2-4E4F-AB9B-6E2F6F4CA2F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5743806A-02E2-4E4F-AB9B-6E2F6F4CA2F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13782A5D-8507-4C6B-BB32-45CF6088D227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13782A5D-8507-4C6B-BB32-45CF6088D227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13782A5D-8507-4C6B-BB32-45CF6088D227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13782A5D-8507-4C6B-BB32-45CF6088D227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5743806A-02E2-4E4F-AB9B-6E2F6F4CA2F1} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
+		{13782A5D-8507-4C6B-BB32-45CF6088D227} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
+		{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
+		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
 	EndGlobalSection
 EndGlobal

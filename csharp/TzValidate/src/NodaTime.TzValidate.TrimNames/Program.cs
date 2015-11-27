@@ -5,13 +5,13 @@
 using System;
 using System.IO;
 
-namespace TrimNames
+namespace NodaTime.TzValidate.TrimNames
 {
     /// <summary>
     /// Tiny app to trim the names off tzvalidate output. This could probably be done fairly
     /// easily in a shell script with sed etc, but it's simple enough to write for Windows...
     /// </summary>
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {

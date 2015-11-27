@@ -198,6 +198,9 @@ FakesAssemblies/
 # Libraries
 lib/*
 
+# DNX
+project.lock.json
+
 # Local output
 icu4j.txt
 java7.txt

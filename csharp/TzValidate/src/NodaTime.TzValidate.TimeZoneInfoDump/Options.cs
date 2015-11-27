@@ -30,7 +30,7 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                 AdditionalNewLineAfterOption = true,
                 Copyright = new CopyrightInfo("Jon Skeet", 2015)
             };
-            help.AddPreOptionsLine("Usage: TimeZoneInfoDump [-f from-year] [-t to-year] [-z zone id]");
+            help.AddPreOptionsLine("Usage: dnx run [-f from-year] [-t to-year] [-z zone id]");
             help.AddOptions(this);
             return help;
         }

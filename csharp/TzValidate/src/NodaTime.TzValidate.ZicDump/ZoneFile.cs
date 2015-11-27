@@ -34,7 +34,7 @@ namespace NodaTime.TzValidate.ZicDump
         {
             var binaryReader = new BinaryReader(input);
             var signature = binaryReader.ReadBytes(20);
-            if (!signature.Take(4).SequenceEqual(Encoding.ASCII.GetBytes("TZif")))
+            if (!signature.Take(4).SequenceEqual(Encoding.UTF8.GetBytes("TZif")))
             {
                 throw new InvalidDataException("Unexpected signature for zic output file");
             }
@@ -153,10 +153,10 @@ namespace NodaTime.TzValidate.ZicDump
             {
                 if (abbreviations[i] == 0)
                 {
-                    return Encoding.ASCII.GetString(abbreviations, index, i - index);
+                    return Encoding.UTF8.GetString(abbreviations, index, i - index);
                 }
             }
-            return Encoding.ASCII.GetString(abbreviations, index, abbreviations.Length - index);
+            return Encoding.UTF8.GetString(abbreviations, index, abbreviations.Length - index);
         }
 
         private static int ReadInt32(BinaryReader reader)

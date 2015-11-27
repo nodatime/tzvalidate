@@ -46,10 +46,9 @@ namespace NodaTime.TzValidate.ZicDump
                 AdditionalNewLineAfterOption = true,
                 Copyright = new CopyrightInfo("Jon Skeet", 2015)
             };
-            help.AddPreOptionsLine("Usage: ZicDump -s data-source [-f from-year] [-t to-year] [-i true/false] [-z zone id]");
+            help.AddPreOptionsLine("Usage: dnx run -s data-source [-f from-year] [-t to-year] [-i true/false] [-z zone id]");
             help.AddOptions(this);
             return help;
         }
-
     }
 }
