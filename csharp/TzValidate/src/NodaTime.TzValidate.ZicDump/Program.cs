@@ -47,7 +47,10 @@ namespace NodaTime.TzValidate.ZicDump
                     file,
                     id = file.StartsWith(directory) ?
                         file.Substring(directory.Length).Replace("\\", "/").TrimStart('/') : file
-                }).OrderBy(pair => pair.id, StringComparer.Ordinal).ToList();
+                })
+                .Where(pair => pair.id != "zone.tab")
+                .OrderBy(pair => pair.id, StringComparer.Ordinal)
+                .ToList();
             if (options.ZoneId != null)
             {
                 var pair = pairs.FirstOrDefault(p => p.id == options.ZoneId);

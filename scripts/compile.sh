@@ -11,3 +11,6 @@ done
 
 echo Compiling ${RELEASE}
 zic -y ${RELEASE}/yearistype.sh -d ${OUTPUT} ${FILES}
+
+# Some tools (e.g. TimeZoneInfo in CoreCLR) need zone.tab
+cp ${RELEASE}/zone.tab ${OUTPUT}
