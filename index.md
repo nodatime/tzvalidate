@@ -240,6 +240,3 @@ corresponding release.
 - [94b](tzdata94b-tzvalidate.zip)
 - [94a](tzdata94a-tzvalidate.zip)
 - [93g](tzdata93g-tzvalidate.zip)
-
-  </body>
-</html>
