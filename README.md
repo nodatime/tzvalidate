@@ -62,20 +62,20 @@ Reports transitions in .NET's "native" `TimeZoneInfo` class. Unless you're runni
 using time zone data built from the IANA sources, this is unlikely to be similar to any other output
 - in particular, many zones have recurrences which effectively start in 1AD.
 
-Code: `csharp/TzValidate/TimeZoneInfoDump`
+Code: `csharp/TzValidate/src/NodaTime.TzValidate.TimeZoneInfoDump`
 
 Supports the regular command line options, and no additional options.
 
 zic
 ----
 
-C# code is available in `csharp/TzValidate/ZicDump` to report transitions stored in the output of `zic`.
+C# code to report transitions stored in the output of `zic`.
 
 Requires:
 
 - A "modern" version of `zic` to have compiled a data source already, as per the IANA web site.
  
-Code: `csharp/TzValidate/ZicDump`
+Code: `csharp/TzValidate/src/NodaTime.TzValidate.ZicDump`
 
 Additional command line options:
 
@@ -84,7 +84,7 @@ Additional command line options:
 - `-i`: (optional) whether or not to fake an initial offset for zones which don't
   report a transition at the big bang; values are "true" or "false" - defaults to "true"
 
-Sample command line: `mono ZicDump.exe -s tzdb2015e`
+Sample command line: `dnx run -s tzdb2015e`
 
 Java 7
 ----
