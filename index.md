@@ -25,6 +25,7 @@ Data up to 2015e inclusive was generated with the 2015e code; from
 2015f onwards, the data is generated with the code from the corresponding release.
 
 [//]: # Insert here
+- [2016d](tzdata2016d-tzvalidate.zip)
 - [2016c](tzdata2016c-tzvalidate.zip)
 - [2016b](tzdata2016b-tzvalidate.zip)
 - [2016a](tzdata2016a-tzvalidate.zip)
