@@ -1,9 +1,10 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 if [ "$#" -ne 1 ]; then
   echo "Usage: generate.sh <release, e.g. 2016d>"
+  exit 1
 fi
 
 cd `dirname $0`/..
@@ -17,7 +18,7 @@ mkdir $1
 wget -q -O - https://www.iana.org/time-zones/repository/releases/tzdata$1.tar.gz | tar xz
 wget -q -O - https://www.iana.org/time-zones/repository/releases/tzcode$1.tar.gz | tar xz
 
-make
+make -s
 
 FILES=
 for i in africa antarctica asia australasia europe northamerica southamerica pacificnew etcetera backward systemv; do
@@ -30,5 +31,5 @@ done
 
 popd
 
-dnu build csharp/TzValidate/src/NodaTime.TzValidate.ZicDump
+dnu build csharp/TzValidate/src/NodaTime.TzValidate.ZicDump --quiet
 dnx -p csharp/TzValidate/src/NodaTime.TzValidate.ZicDump run -s $OUTDIR/data > $OUTDIR/tzdata$1.txt
