@@ -26,6 +26,7 @@ Data up to 2015e inclusive was generated with the 2015e code; data from
 there onwards, the data is generated with the code from the
 corresponding release.
 
+[//]: # Insert here
 - [2015e](tzdata2015e-tzvalidate.zip)
 - [2015d](tzdata2015d-tzvalidate.zip)
 - [2015c](tzdata2015c-tzvalidate.zip)
