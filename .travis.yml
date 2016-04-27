@@ -7,8 +7,8 @@ before_script:
   - chmod go-rwx .travisdeploykey
   - eval `ssh-agent -s`
   - ssh-add .travisdeploykey
-  - git config user.name "Travis-CI"
-  - git config user.email "noreply@travis-ci.org"
+  - git config --global user.name "Travis-CI"
+  - git config --global user.email "noreply@travis-ci.org"
     
 script:
   - set -e
