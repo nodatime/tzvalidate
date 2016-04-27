@@ -31,5 +31,6 @@ done
 
 popd
 
+dnu restore csharp/TzValidate/src
 dnu build csharp/TzValidate/src/NodaTime.TzValidate.ZicDump --quiet
 dnx -p csharp/TzValidate/src/NodaTime.TzValidate.ZicDump run -s $OUTDIR/data > $OUTDIR/tzdata$1.txt
