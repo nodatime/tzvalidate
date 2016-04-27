@@ -21,12 +21,15 @@ just consists of a single text file. When new data is available, it
 is built semi-automatically (in that it's automated, but needs a
 nudge to start it, along with a Noda Time release of the data).
 
-Data up to 2015e inclusive was generated with the 2015e code; data from
-2015f to 2016d inclusive was generated with the 2016d code; from
-there onwards, the data is generated with the code from the
-corresponding release.
+Data up to 2015e inclusive was generated with the 2015e code; from
+2015f onwards, the data is generated with the code from the corresponding release.
 
 [//]: # Insert here
+- [2016c](tzdata2016c-tzvalidate.zip)
+- [2016b](tzdata2016b-tzvalidate.zip)
+- [2016a](tzdata2016a-tzvalidate.zip)
+- [2015g](tzdata2015g-tzvalidate.zip)
+- [2015f](tzdata2015f-tzvalidate.zip)
 - [2015e](tzdata2015e-tzvalidate.zip)
 - [2015d](tzdata2015d-tzvalidate.zip)
 - [2015c](tzdata2015c-tzvalidate.zip)
