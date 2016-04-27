@@ -209,3 +209,6 @@ joda.txt
 nodatime.txt
 ruby.txt
 zdump.txt
+
+# Output of the generate.sh script
+tmp
