@@ -22,7 +22,8 @@ OUT=$ROOT/tmp
 $ROOT/scripts/generate.sh $RELEASE
 
 cd $OUT
-git clone https://github.com/nodatime/tzvalidate.git -b gh-pages gh-pages
+# Note the use of SSH instead of HTTPS here, for use with deploy keys
+git clone git@github.com:nodatime/tzvalidate.git -b gh-pages gh-pages
 ZIPFILE=tzdata$RELEASE-tzvalidate.zip
 zip $ZIPFILE tzdata$RELEASE.txt
 cp $ZIPFILE gh-pages
