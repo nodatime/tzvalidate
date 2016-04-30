@@ -19,7 +19,7 @@ Header section (optional)
 
 This is simply a list of key/value pairs, in the form
 
-    *key* `:` *value*
+> *key* `:` *value*
     
 followed by an empty line to indicate that the following line is the
 start of the body.
