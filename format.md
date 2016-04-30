@@ -56,7 +56,7 @@ and meaning:
   from the start of time, the year 1 should be used as the start point.
   Examples: `1-2035` (the canonical format), `1900-2000`
   (transitions on or after 1900-01-01T00:00:00Z and strictly
-  before 2000-01-01T00:00:00Z).
+  before 2000-01-01 00:00:00Z).
 - `Generator`: The name of the tool generating the file. Examples:
   `zdump`, `NodaTime.TzValidate.NodaDump`.
 - `GeneratorUrl`: The URL to visit for more information and/or source
@@ -85,12 +85,12 @@ Note that even the final zone in the file ends with a blank line,
 for simplicity of generation.
 
 The canonical range of transitions (i.e. in distributed data) is from the start of
-time until 2035-01-01T00:00:00Z (exclusive).
+time until 2035-01-01 00:00:00Z (exclusive).
 
 Each transition line consists of:
 
-- The instant of the transition, in the format `yyyy-MM-ddTHH:mm:ssZ`
-  (where both `T` and `Z` are literals)
+- The instant of the transition, in the format `yyyy-MM-dd HH:mm:ssZ`
+  (where `Z` is a literal)
 - A space
 - The offset from UTC after the transition, in the format "+hh:mm:ss"
   (where the + is either '+' or '-', but present in either case; '+'
@@ -108,9 +108,9 @@ lines for the `America/La_Paz` zone.
 
     America/La_Paz
     Initially:           -04:32:36 standard LMT
-    1890-01-01T04:32:36Z -04:32:36 standard CMT
-    1931-10-15T04:32:36Z -03:32:36 daylight BOST
-    1932-03-21T03:32:36Z -04:00:00 standard BOT
+    1890-01-01 04:32:36Z -04:32:36 standard CMT
+    1931-10-15 04:32:36Z -03:32:36 daylight BOST
+    1932-03-21 03:32:36Z -04:00:00 standard BOT
 
 Motivation for the format
 ====
@@ -130,8 +130,10 @@ Motivation for the format
   read as a table.
 - The extra spaces after "Initially:" make the initial offset line up
   with the offsets of transitions
-- The transition instant is expressed in UTC and in ISO-8601 extended
-  format to be as simple as possible to parse in code if desired.
+- The transition instant is expressed in UTC and in a format which is
+  simple to parse in code if desired. (It's not quite ISO-8601 as the
+  'T' between the date and time format proved to hamper readability,
+  but it should be easy to parse on any platform.)
 - Ending in 2035 gives reasonable confidence in validation without breaking
   past the 2038 Unix timestamp apocalypse. In particular, `zic` appears
   to generate data up until 2037 and then use a recurrence rule.
