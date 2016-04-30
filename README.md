@@ -62,7 +62,7 @@ Reports transitions in .NET's "native" `TimeZoneInfo` class. Unless you're runni
 using time zone data built from the IANA sources, this is unlikely to be similar to any other output
 - in particular, many zones have recurrences which effectively start in 1AD.
 
-Code: `csharp/TzValidate/src/NodaTime.TzValidate.TimeZoneInfoDump`
+Code: `csharp/src/NodaTime.TzValidate.TimeZoneInfoDump`
 
 Supports the regular command line options, and no additional options.
 
@@ -75,7 +75,7 @@ Requires:
 
 - A "modern" version of `zic` to have compiled a data source already, as per the IANA web site.
  
-Code: `csharp/TzValidate/src/NodaTime.TzValidate.ZicDump`
+Code: `csharp/src/NodaTime.TzValidate.ZicDump`
 
 Additional command line options:
 
