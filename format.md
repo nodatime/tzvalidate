@@ -50,34 +50,42 @@ and meaning:
   document describes version `tzvalidate-0.1`.
 - `Version`: a version indicator for the data described in the file.
   Example: `2016d`
-- `Range`: an inclusive range of years covered by transitions in the
-  file. If the file covers all transitions up to a year, the year 1
-  should be used as the start point. Examples: `1-2035`, `1900-2000`.
+- `Range`: a range of years covered by transitions in the
+  file. A year number expresses the first instant of that year in UTC,
+  and the upper bound is exclusive. If the file covers all transitions
+  from the start of time, the year 1 should be used as the start point.
+  Examples: `1-2035` (the canonical format), `1900-2000`
+  (transitions on or after 1900-01-01T00:00:00Z and strictly
+  before 2000-01-01T00:00:00Z).
 - `Generator`: The name of the tool generating the file. Examples:
   `zdump`, `NodaTime.TzValidate.NodaDump`.
 - `GeneratorUrl`: The URL to visit for more information and/or source
   code of the tool generating the file.
-- `Body-SHA-256`: A SHA-256 hash of the body of the file.
+- `Body-SHA-256`: A SHA-256 hash of the body section of the file.
 
 Body section
 ====
 
-The zones present are sorted using an ordinal comparison of UTF-16
-code units. (In practice, all zone IDs are currently ASCII, so this
+The zones present are sorted using an ordinal comparison of Unicode
+code points. (In practice, all zone IDs are currently ASCII, so this
 is an ordinal comparison of ASCII values.) All known zones are included,
-even if they aliases for other zones.
+even if they are aliases for other zones.
 
 The information for each zone consists of:
 
 - The zone ID (e.g. "London/Europe"
 - An initial line indicating the state of the time zone before the
-  first transition. This has the same format as a transition line, but
-  with `"Initially:           "` instead of the transition instant
-- A line per transition strictly before 2035-01-01T00:00:00Z
+  first transition. This has the same format as a transition line,
+  but with `Initially:` followed by 11 spaces instead of the
+  transition instant.
+- A line per transition within the generated range.
 - A blank line
 
 Note that even the final zone in the file ends with a blank line,
 for simplicity of generation.
+
+The canonical range of transitions (i.e. in distributed data) is from the start of
+time until 2035-01-01T00:00:00Z (exclusive).
 
 Each transition line consists of:
 
