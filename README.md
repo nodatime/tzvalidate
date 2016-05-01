@@ -12,8 +12,8 @@ Data
 ====
 
 I'm temporarily hosting data sourced from `zic`/`zdump` (which I view as canonical)
-at http://nodatime.org/tzvalidate. You can download a zip file of each release you're
-interested in, or one containing everything we've got.
+at https://nodatime.github.io/tzvalidate/. You can download a zip file of each release
+you're interested in, or one containing everything we've got.
 
 Current implementations and requirements
 ====
