@@ -2,10 +2,8 @@
 
 set -e
 
-# Note: the .* here can be removed when https://github.com/nodatime/nodatime/issues/502 has been fixed
-RELEASE=`wget -q -O- http://nodatime.org/tzdb/latest.txt | sed -r 's/.*tzdb([a-z0-d]+)\.nzd.*/\1/g'`
-
-HTML=`wget -q -O- http://nodatime.github.io/tzvalidate/`
+RELEASE=$(curl -s https://www.iana.org/time-zones | grep -oP '(?<=\/time-zones\/repository\/releases\/tzdata)[A-Za-z0-9]+')
+HTML=`wget -q -O- https://nodatime.github.io/tzvalidate/`
 MATCH=">${RELEASE}<"
 
 if [[ $HTML == *$MATCH* ]]
