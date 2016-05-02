@@ -25,6 +25,9 @@ namespace NodaTime.TzValidate.ZicDump
         [Option("z", "zone", Required = false, HelpText = "Zone ID, to dump a single time zone")]
         public string ZoneId { get; set; }
 
+        [Option("v", "version", Required = false, HelpText = "Data version, if known")]
+        public string Version { get; set; }
+
         // The default bool handling in CommandLine is somewhat broken.
         // Fake it with an enum...
         public enum BoolValue

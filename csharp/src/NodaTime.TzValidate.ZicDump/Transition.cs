@@ -47,7 +47,7 @@ namespace NodaTime.TzValidate.ZicDump
         public override string ToString()
         {
             return string.Format("{0} {1} {2} {3}",
-                Instant == null ? "Initially:          " : Instant.Value.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
+                Instant == null ? "Initially:          " : Instant.Value.ToString("yyyy-MM-dd HH:mm:ss'Z'", CultureInfo.InvariantCulture),
                 // Urgh - no custom format for TimeSpan to specify a sign.
                 // Good job we know that the offset is always within a day...
                 (Offset.Ticks >= 0 ? "+" : "-") + Offset.ToString("hh':'mm':'ss", CultureInfo.InvariantCulture),

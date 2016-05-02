@@ -21,6 +21,9 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
 
         [Option("z", "zone", Required = false, HelpText = "Zone ID, to dump a single time zone")]
         public string ZoneId { get; set; }
+
+        [Option("v", "version", Required = false, HelpText = "Data version, if known")]
+        public string Version { get; set; }
         
         [HelpOption(HelpText = "Display this help screen.")]
         public string GetUsage()
