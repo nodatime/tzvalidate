@@ -61,7 +61,8 @@ and meaning:
   `zdump`, `NodaTime.TzValidate.NodaDump`.
 - `GeneratorUrl`: The URL to visit for more information and/or source
   code of the tool generating the file.
-- `Body-SHA-256`: A SHA-256 hash of the body section of the file.
+- `Body-SHA-256`: A SHA-256 hash of the body section of the file,
+  expressed as a sequence of 64 lower-case hex digits.
 
 Body section
 ====
