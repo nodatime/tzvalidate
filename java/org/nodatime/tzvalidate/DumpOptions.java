@@ -19,34 +19,46 @@ public final class DumpOptions {
     private final int fromYear;
     private final int toYear;
     private final String source;
-    
-    private DumpOptions(String zoneId, int fromYear, int toYear, String source) {
+    private final String version;
+
+    private DumpOptions(String zoneId, int fromYear, int toYear, String source,
+        String version) {
         this.zoneId = zoneId;
         this.fromYear = fromYear;
         this.toYear = toYear;
         this.source = source;
+        this.version = version;
     }
-    
+
     public String getZoneId() {
         return zoneId;
     }
-    
+
     public int getFromYear() {
         return fromYear;
     }
-    
+
     public int getToYear() {
         return toYear;
     }
-    
+
     public String getSource() {
         return source;
     }
-    
-    public static DumpOptions parse(String name, String[] args, boolean includeSourceOption) throws ParseException {
+
+    public String getVersion() {
+        return version;
+    }
+
+    public static DumpOptions parse(String name, String[] args,
+        boolean includeSourceOption) throws ParseException {
         Options options = new Options();
-        options.addOption("f", "from-year", true, "Lower bound (inclusive) to print transitions from.");
-        options.addOption("t", "to-year", true, "Upper bound (inclusive) to print transitions from.");
+        options.addOption("f", "from-year", true,
+            "Lower bound (inclusive) to print transitions from.");
+        options.addOption("t", "to-year", true,
+            "Upper bound (inclusive) to print transitions from.");
+        options.addOption("v", "version", true,
+            "Version to report in output headers.");
         options.addOption("z", "zone", true, "Single zone ID to dump.");
         options.addOption("?", "h", false, "Print help.");
         if (includeSourceOption) {
@@ -59,10 +71,9 @@ public final class DumpOptions {
             formatter.printHelp(name, options);
             return null;
         }
-        return new DumpOptions(
-            cmd.getOptionValue("z"), 
+        return new DumpOptions(cmd.getOptionValue("z"),
             cmd.hasOption("f") ? Integer.parseInt(cmd.getOptionValue("f")) : 1,
-            cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t")) : 2035,
-            cmd.getOptionValue("s"));
+            cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t"))
+                : 2035, cmd.getOptionValue("s"), cmd.getOptionValue("v"));
     }
 }

@@ -5,7 +5,11 @@
 using CommandLine;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace NodaTime.TzValidate.TimeZoneInfoDump
 {
@@ -23,24 +27,27 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
             if (options.ZoneId != null)
             {
                 var zone = TimeZoneInfo.FindSystemTimeZoneById(options.ZoneId);
-                Dump(zone, options);
+                Dump(zone, options, Console.Out);
             }
             else
             {
+                var writer = new StringWriter();
                 var zones = TimeZoneInfo.GetSystemTimeZones().OrderBy(zone => zone.Id, StringComparer.Ordinal);
                 foreach (var zone in zones)
                 {
-                    Dump(zone, options);
-                    Console.Write("\r\n");
+                    Dump(zone, options, writer);
                 }
+                var text = writer.ToString();
+                WriteHeaders(text, options, Console.Out);
+                Console.Write(text);
             }
 
             return 0;
         }
 
-        private static void Dump(TimeZoneInfo zone, Options options)
+        private static void Dump(TimeZoneInfo zone, Options options, TextWriter writer)
         {
-            Console.Write($"{zone.Id}\r\n");
+            Console.Write($"{zone.Id}\n");
 
             // This will be a bit odd using Windows time zones, as most have permanent
             // daylight saving rules... but for tz data, it should be okay.
@@ -64,13 +71,14 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                 // It's unfortunate that TimeZoneInfo doesn't support the idea of different names
                 // for different periods in history. Never mind - this is better than nothing,
                 // for diagnostic purposes.
-                Console.WriteLine("{0} {1} {2} {3}",
-                    transition.Value.ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture),
+                Console.Write("{0} {1} {2} {3}\n",
+                    transition.Value.ToString("yyyy-MM-dd HH:mm:ss'Z'", CultureInfo.InvariantCulture),
                     (offset.Ticks >= 0 ? "+" : "-") + offset.ToString("hh':'mm':'ss", CultureInfo.InvariantCulture),
                     isDaylight ? "daylight" : "standard",
                     isDaylight ? zone.DaylightName : zone.StandardName);
                 transition = GetNextTransition(zone, transition.Value, end);
             }
+            writer.Write("\n");
         }
 
         private static DateTimeOffset? GetNextTransition(TimeZoneInfo zone, DateTimeOffset start, DateTimeOffset end)
@@ -102,12 +110,32 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                     }
                     // If we turn out to have hit the end point, we're done without a final transition. 
                     return upperInclusiveTicks == end.Ticks
-                        ? (DateTimeOffset?) null
+                        ? (DateTimeOffset?)null
                         : new DateTimeOffset(upperInclusiveTicks, TimeSpan.Zero);
                 }
                 now = now.AddDays(1);
             }
             return null;
         }
-   }
+
+        private static void WriteHeaders(string text, Options options, TextWriter writer)
+        {
+            if (options.Version != null)
+            {
+                writer.Write($"Version: {options.Version}\n");
+            }
+            using (var hashAlgorithm = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(text);
+                var hash = hashAlgorithm.ComputeHash(bytes);
+                var hashText = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                writer.Write($"Body-SHA-256: {hashText}\n");
+            }
+            writer.Write("Format: tzvalidate-0.1\n");
+            writer.Write($"Range: {options.FromYear ?? 1}-{options.ToYear}\n");
+            writer.Write($"Generator: {typeof(Program).GetTypeInfo().Assembly.GetName().Name}\n");
+            writer.Write($"GeneratorUrl: https://github.com/nodatime/tzvalidate\n");
+            writer.Write("\n");
+        }
+    }
 }

@@ -5,6 +5,7 @@
 package org.nodatime.tzvalidate;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -16,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.ParseException;
 
-public final class Java7Dump {
+public final class Java7Dump implements ZoneDumper {
     
     private static final long ONE_DAY_MILLIS = TimeUnit.DAYS.toMillis(1);
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final SimpleDateFormat INSTANT_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    private static final SimpleDateFormat INSTANT_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'", Locale.US);
     private static final SimpleDateFormat ZONE_NAME_FORMAT = new SimpleDateFormat("zz", Locale.US);
     
     static {
@@ -28,27 +29,12 @@ public final class Java7Dump {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-        DumpOptions options = DumpOptions.parse("Java7Dump", args, false);
-        if (options == null) {
-            return;
-        }
-        
-        if (options.getZoneId() != null) {
-            dumpZone(options.getZoneId(), options);
-        } else {
-            String[] ids = TimeZone.getAvailableIDs();
-            Arrays.sort(ids);
-            for (String id : ids) {
-                dumpZone(id, options);
-                System.out.printf("\r\n");
-            }
-        }
+        DumpCoordinator.dump(new Java7Dump(), false,  args);
     }
 
-    private static void dumpZone(String id, DumpOptions options) {
-        System.out.printf("%s\r\n", id);
+    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
+        writer.write(id + "\n");
         
-        int fromYear = options.getFromYear();
         // Given the way we find transitions, we really don't want to go
         // from any earlier than this...
         if (fromYear < 1800) {
@@ -59,22 +45,20 @@ public final class Java7Dump {
         calendar.set(fromYear, 0, 1, 0, 0, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         long start = calendar.getTimeInMillis();
-        calendar.set(options.getToYear(), 0, 1, 0, 0, 0);
+        calendar.set(toYear, 0, 1, 0, 0, 0);
         long end = calendar.getTimeInMillis();
         calendar.set(1, 0, 1, 0, 0, 0);
         long early = calendar.getTimeInMillis();
         
         TimeZone zone = TimeZone.getTimeZone(id);
         ZONE_NAME_FORMAT.setTimeZone(zone);
-        System.out.printf("Initially:           %s\r\n", formatOffsetAndName(zone, early));  
+        writer.write("Initially:           " + formatOffsetAndName(zone, early) + "\n");  
         
         Long transition = getNextTransition(zone, start - 1, end);
         Date date = new Date(); // Reused in the loop
         while (transition != null) {
             date.setTime(transition);
-            System.out.printf("%s %s\r\n",
-                INSTANT_FORMAT.format(date),
-                formatOffsetAndName(zone, transition));
+            writer.write(INSTANT_FORMAT.format(date) + " " + formatOffsetAndName(zone, transition) + "\n");
             transition = getNextTransition(zone, transition, end);
         }
     }
@@ -132,5 +116,15 @@ public final class Java7Dump {
             sign, seconds / 3600, (seconds / 60) % 60, seconds % 60,
             zone.inDaylightTime(date) ? "daylight" : "standard",
             ZONE_NAME_FORMAT.format(date));
+    }
+
+    @Override
+    public void initialize(DumpOptions options) {
+        // No-op
+    }
+
+    @Override
+    public Iterable<String> getZoneIds() {
+        return Arrays.asList(TimeZone.getAvailableIDs());
     }
 }

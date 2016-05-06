@@ -5,6 +5,7 @@
 package org.nodatime.tzvalidate;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
@@ -18,9 +19,9 @@ import com.ibm.icu.util.GregorianCalendar;
 import com.ibm.icu.util.TimeZone;
 import com.ibm.icu.util.TimeZoneTransition;
 
-public final class IcuDump {
+public final class IcuDump implements ZoneDumper {
     private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final SimpleDateFormat INSTANT_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+    private static final SimpleDateFormat INSTANT_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'", Locale.US);
     // A poor attempt to get the time zone abbreviation. It's locale-sensitive, and then only
     // applies some of the time.
     // See http://stackoverflow.com/questions/31626356
@@ -31,39 +32,25 @@ public final class IcuDump {
     }
 
     public static void main(String[] args) throws IOException, ParseException {
-        DumpOptions options = DumpOptions.parse("IcuDump", args, false);
-        if (options == null) {
-            return;
-        }
-        
-        if (options.getZoneId() != null) {
-            dumpZone(options.getZoneId(), options);
-        } else {
-            String[] ids = TimeZone.getAvailableIDs();
-            Arrays.sort(ids);
-            for (String id : ids) {
-                dumpZone(id, options);
-                System.out.printf("\r\n");
-            }
-        }
+        DumpCoordinator.dump(new IcuDump(), false, args);
     }
 
-    private static void dumpZone(String id, DumpOptions options) {
-        System.out.printf("%s\r\n", id);
+    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
+        writer.write(id + "\n");
         BasicTimeZone zone = (BasicTimeZone) TimeZone.getTimeZone(id);
         ZONE_NAME_FORMAT.setTimeZone(zone);
         
         Calendar calendar = GregorianCalendar.getInstance(UTC);
-        calendar.set(options.getFromYear(), 0, 1, 0, 0, 0);
+        calendar.set(fromYear, 0, 1, 0, 0, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         long start = calendar.getTimeInMillis();
-        calendar.set(options.getToYear(), 0, 1, 0, 0, 0);
+        calendar.set(toYear, 0, 1, 0, 0, 0);
         long end = calendar.getTimeInMillis();
         // 1 AD to get the initial value
         calendar.set(1, 0, 1, 0, 0, 0);
         long early = calendar.getTimeInMillis();
 
-        System.out.printf("Initially:           %s\r\n", formatOffsetAndName(zone, early));  
+        writer.write("Initially:           " + formatOffsetAndName(zone, early) + "\n");  
         
         TimeZoneTransition transition = zone.getNextTransition(start, true /* inclusive */);
         
@@ -71,9 +58,7 @@ public final class IcuDump {
         while (transition != null && transition.getTime() < end) {
             long now = transition.getTime();
             date.setTime(now);
-            System.out.printf("%s %s\r\n",
-                INSTANT_FORMAT.format(date),
-                formatOffsetAndName(zone, now));
+            writer.write(INSTANT_FORMAT.format(date) + " " + formatOffsetAndName(zone, now) + "\n");
             transition = zone.getNextTransition(now, false /* exclusive */);
         }
     }
@@ -90,5 +75,15 @@ public final class IcuDump {
             sign, seconds / 3600, (seconds / 60) % 60, seconds % 60,
             zone.inDaylightTime(date) ? "daylight" : "standard",
             ZONE_NAME_FORMAT.format(date));
+    }
+
+    @Override
+    public void initialize(DumpOptions options) {
+        // No-op
+    }
+
+    @Override
+    public Iterable<String> getZoneIds() {
+        return Arrays.asList(TimeZone.getAvailableIDs());
     }
 }

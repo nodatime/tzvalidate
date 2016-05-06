@@ -8,22 +8,26 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
+import java.io.Writer;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
-import org.joda.time.*;
-import org.joda.time.format.*;
-import org.joda.time.tz.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Instant;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.tz.ZoneInfoCompiler;
 
-public final class JodaDump {
+public final class JodaDump implements ZoneDumper {
 
+    private Map<String, DateTimeZone> zones;
+    
     private static final DateTimeFormatter INSTANT_FORMAT = DateTimeFormat
-        .forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        .forPattern("yyyy-MM-dd HH:mm:ss'Z'")
         .withZone(DateTimeZone.UTC);
     private static final DateTimeFormatter ZONE_NAME_FORMAT = DateTimeFormat
         .forPattern("zz");
@@ -34,30 +38,7 @@ public final class JodaDump {
         "northamerica", "pacificnew", "southamerica");
 
     public static void main(String[] args) throws IOException, ParseException {
-        DumpOptions options = DumpOptions.parse("JodaDump", args, true);
-        if (options == null) {
-            return;
-        }
-        
-        Map<String, DateTimeZone> zones = getZones(options.getSource());
-
-        String zoneId = options.getZoneId();
-        if (zoneId != null) {
-            DateTimeZone zone = zones.get(zoneId);
-            if (zone == null) {
-                System.out.println("Zone " + zoneId + " does not exist");
-            } else {
-                dumpZone(zoneId, zone, options);
-            }
-        } else {
-            // Sort IDs in ordinal fashion
-            List<String> ids = new ArrayList<String>(zones.keySet());
-            Collections.sort(ids); // compareTo does ordinal comparisons
-            for (String id : ids) {
-                dumpZone(id, zones.get(id), options);
-                System.out.printf("\r\n");
-            }
-        }
+        DumpCoordinator.dump(new JodaDump(), true, args);
     }
     
     private static Map<String, DateTimeZone> getZones(String source) throws IOException {
@@ -83,17 +64,20 @@ public final class JodaDump {
         return zones;
     }
 
-    private static void dumpZone(String id, DateTimeZone zone, DumpOptions options) {
+    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
+        writer.write(id + "\n");
+        DateTimeZone zone = zones.get(id);
         // Note that the ID we fetched isn't always the same as DateTimeZone.getID()
-        System.out.printf("%s\r\n", id);
         DateTimeFormatter nameFormatter = ZONE_NAME_FORMAT.withZone(zone);
-        System.out.printf("Initially:           %s %s %s\r\n",
+        
+        String line = String.format("Initially:           %s %s %s\n",
             printOffset(zone.getOffset(Long.MIN_VALUE)),
             zone.isStandardOffset(Long.MIN_VALUE) ? "standard" : "daylight",
             zone.getShortName(Long.MIN_VALUE));
+        writer.write(line);
                 
-        Instant start = new DateTime(options.getFromYear(), 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
-        Instant end = new DateTime(options.getToYear(), 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
+        Instant start = new DateTime(fromYear, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
+        Instant end = new DateTime(toYear, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
 
         long now = zone.nextTransition(start.getMillis());
         if (now == start.getMillis()) {
@@ -102,11 +86,12 @@ public final class JodaDump {
         while (now < end.getMillis()) {
             int standardOffset = zone.getStandardOffset(now);
             int wallOffset = zone.getOffset(now);
-            System.out.printf("%s %s %s %s\r\n",
+            line = String.format("%s %s %s %s\n",
                               INSTANT_FORMAT.print(now),
                               printOffset(wallOffset),
                               standardOffset == wallOffset ? "standard" : "daylight",
                               nameFormatter.print(now));
+            writer.write(line);
                               
             long next = zone.nextTransition(now);
             if (next <= now) {
@@ -124,5 +109,15 @@ public final class JodaDump {
         String sign = millis < 0 ? "-" : "+";
         return String.format("%s%02d:%02d:%02d", sign, seconds / 3600,
                 (seconds / 60) % 60, seconds % 60);
+    }
+
+    @Override
+    public void initialize(DumpOptions options) throws IOException {
+        zones = getZones(options.getSource());
+    }
+
+    @Override
+    public Iterable<String> getZoneIds() {
+        return zones.keySet();
     }
 }

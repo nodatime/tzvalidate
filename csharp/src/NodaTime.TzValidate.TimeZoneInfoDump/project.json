@@ -7,7 +7,7 @@
   "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
 
   "dependencies": {
-    "NodaTime.TzValidate.DnxCommandLine": { "type": "build" }
+    "NodaTime.TzValidate.DnxCommandLine": { "type": "build" },
   },
 
   "commands": {
@@ -22,7 +22,8 @@
         "System.Collections": "4.0.11-beta-23516",
         "System.Console": "4.0.0-beta-23516",
         "System.Linq": "4.0.1-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
+        "System.Threading": "4.0.11-beta-23516",
+        "System.Security.Cryptography.Algorithms": "4.0.0-beta-23516"
       }
     }
   }
