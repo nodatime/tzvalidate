@@ -1,7 +1,7 @@
 ﻿{
   "version": "1.0.0-*",
   "description": "NodaTime.TzValidate.TrimNames Console Application",
-  "authors": [ "Jon" ],
+  "authors": [ "Jon Skeet" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",

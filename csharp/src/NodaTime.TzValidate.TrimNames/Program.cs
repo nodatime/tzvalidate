@@ -3,7 +3,9 @@
 // as found in the LICENSE.txt file.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NodaTime.TzValidate.TrimNames
 {
@@ -22,16 +24,27 @@ namespace NodaTime.TzValidate.TrimNames
 
         static void RewriteLines(TextReader input, TextWriter output)
         {
+            bool inHeaders = true;
             string line;
             while ((line = input.ReadLine()) != null)
             {
-                // Keep using \r\n as the line ending...
-                output.Write("{0}\r\n", TrimLine(line));
+                string outputLine;
+                if (inHeaders && (line == "" || line.Contains(":")))
+                {
+                    outputLine = line;
+                }
+                else
+                {
+                    inHeaders = false;
+                    outputLine = TrimLine(line);
+                }
+                // Keep using \n as the line ending...
+                output.Write("{0}\n", outputLine);
             }
         }
 
         // This shows what we want to keep
-        const string SampleContent = "1918-01-01T00:00:52Z +00:00:00 standard";
+        const string SampleContent = "1918-01-01 00:00:52Z +00:00:00 standard";
 
         static string TrimLine(string line)
         {
