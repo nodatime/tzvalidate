@@ -15,7 +15,7 @@ The hex string after each link is the SHA-256 hash of the *body* of
 the tzvalidate file. This information is also available as a text file
 per release, with a name of `tzdata(release)-sha256.txt`. For example,
 the URL for the 2016d release body SHA-256 is
-http://nodatime.github.io/tzvalidate/tzdata2016d-sha256.txt. Note that
+https://nodatime.github.io/tzvalidate/tzdata2016d-sha256.txt. Note that
 this is *only* the SHA-256 of the body, not of the whole file. (Its
 purpose is to enable automatic validation of other generators without
 having to download the whole generated file.)
