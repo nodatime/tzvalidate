@@ -25,11 +25,11 @@ git clone git@github.com:nodatime/tzvalidate.git -b gh-pages gh-pages
 ZIPFILE=tzdata$RELEASE-tzvalidate.zip
 HASHFILE=tzdata$RELEASE-sha256.txt
 HASH=`cat tzdata$RELEASE.txt | head -n 5 | grep Body-SHA-256 | cut -d: -f2 | sed 's/ //g'`
-echo $HASH > $HASHFILE
 zip $ZIPFILE tzdata$RELEASE.txt
 cp $ZIPFILE gh-pages
 
 sed -i "s/# Insert here/# Insert here\n- [$RELEASE]($ZIPFILE): $HASH/g" gh-pages/index.md
 cd gh-pages
+echo $HASH > $HASHFILE
 git add $ZIPFILE $HASHFILE index.md
 git commit -m "Added $RELEASE"
