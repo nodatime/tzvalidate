@@ -794,7 +794,6 @@ namespace CommandLine
         }
     }
 
-    [DebuggerDisplay("ShortName = {ShortName}, LongName = {LongName}")]
     internal sealed class OptionInfo
     {
         private readonly OptionAttribute _attribute;
