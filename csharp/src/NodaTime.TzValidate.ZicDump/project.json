@@ -8,9 +8,9 @@
   },
 
   "dependencies": {
-    "NodaTime.TzValidate.DnxCommandLine": { 
+    "NodaTime.TzValidate.DnxCommandLine": {
       "type": "build",
-      "version": "*"
+      "target": "project"
     }
   },
   

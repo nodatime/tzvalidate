@@ -16,7 +16,7 @@
   "dependencies": {
     "NodaTime.TzValidate.DnxCommandLine": { 
       "type": "build",
-      "version": "*"
+      "target": "project"
     }
   },
   

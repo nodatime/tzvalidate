@@ -3,9 +3,7 @@
 // as found in the LICENSE.txt file.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace NodaTime.TzValidate.TrimNames
 {

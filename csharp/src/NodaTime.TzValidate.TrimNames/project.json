@@ -7,13 +7,6 @@
     "emitEntryPoint": true
   },
 
-  "dependencies": {
-    "NodaTime.TzValidate.DnxCommandLine": { 
-      "type": "build",
-      "version": "*"
-    }
-  },
-
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
