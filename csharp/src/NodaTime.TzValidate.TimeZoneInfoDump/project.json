@@ -1,29 +1,38 @@
-﻿{
+{
   "version": "1.0.0-*",
   "description": "BCL implementation of TzValidate",
   "authors": [ "Jon Skeet" ],
-  "tags": [ "" ],
-  "projectUrl": "https://github.com/nodatime/tzvalidate",
-  "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0",
+
+  "packOptions": {
+    "tags": [ "timezones", "iana" ],
+    "projectUrl": "https://github.com/nodatime/tzvalidate",
+    "licenseUrl": "http://www.apache.org/licenses/LICENSE-2.0"
+  },
+  
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
 
   "dependencies": {
-    "NodaTime.TzValidate.DnxCommandLine": { "type": "build" },
+    "NodaTime.TzValidate.DnxCommandLine": { 
+      "type": "build",
+      "target": "project"
+    }
   },
-
-  "commands": {
-    "NodaTime.TzValidate.TimeZoneInfoDump": "NodaTime.TzValidate.TimeZoneInfoDump"
-  },
-
+  
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": {
+    "netcoreapp1.0": {
       "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Console": "4.0.0-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Threading": "4.0.11-beta-23516",
-        "System.Security.Cryptography.Algorithms": "4.0.0-beta-23516"
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        },
+        "Microsoft.CSharp": "4.0.1-rc2-24027",
+        "System.Collections": "4.0.11-rc2-24027",
+        "System.Console": "4.0.0-rc2-24027",
+        "System.Linq": "4.1.0-rc2-24027",
+        "System.Threading": "4.0.11-rc2-24027",
+        "System.Security.Cryptography.Algorithms": "4.1.0-rc2-24027"
       }
     }
   }

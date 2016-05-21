@@ -14,9 +14,9 @@ namespace NodaTime.TzValidate.ZicDump
     /// <summary>
     /// Dumps all the time zones from a particular zic output directory or file in tzvalidate format.
     /// </summary>
-    public class Program
+    class Program
     {
-        public int Main(string[] args)
+        static int Main(string[] args)
         {
             Options options = new Options();
             ICommandLineParser parser = new CommandLineParser(new CommandLineParserSettings(Console.Error) { MutuallyExclusive = true });

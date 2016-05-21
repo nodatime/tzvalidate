@@ -1,31 +1,22 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "NodaTime.TzValidate.TrimNames Console Application",
+  "description": "Console application to trim names from TzValidate output",
   "authors": [ "Jon Skeet" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
 
-  "compilationOptions": {
+  "buildOptions": {
     "emitEntryPoint": true
   },
 
-  "dependencies": {
-  },
-
-  "commands": {
-    "NodaTime.TzValidate.TrimNames": "NodaTime.TzValidate.TrimNames"
-  },
-
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": {
+    "netcoreapp1.0": {
       "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Console": "4.0.0-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-rc2-3002702"
+        },
+        "System.Collections": "4.0.11-rc2-24027",
+        "System.Console": "4.0.0-rc2-24027",
+        "System.Linq": "4.1.0-rc2-24027",
       }
     }
   }
