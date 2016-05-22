@@ -47,14 +47,14 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
 
         private static void Dump(TimeZoneInfo zone, Options options, TextWriter writer)
         {
-            Console.Write($"{zone.Id}\n");
+            writer.Write($"{zone.Id}\n");
 
             // This will be a bit odd using Windows time zones, as most have permanent
             // daylight saving rules... but for tz data, it should be okay.
             var initial = new DateTimeOffset(2, 1, 1, 0, 0, 0, 0, TimeSpan.Zero);
             var initialOffset = zone.GetUtcOffset(initial);
             var initialDaylight = zone.IsDaylightSavingTime(initial);
-            Console.WriteLine("Initially:           {0} {1} {2}",
+            writer.Write("Initially:           {0} {1} {2}\n",
                 (initialOffset.Ticks >= 0 ? "+" : "-") + initialOffset.ToString("hh':'mm':'ss", CultureInfo.InvariantCulture),
                 initialDaylight ? "daylight" : "standard",
                 initialDaylight ? zone.DaylightName : zone.StandardName);
@@ -71,7 +71,7 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                 // It's unfortunate that TimeZoneInfo doesn't support the idea of different names
                 // for different periods in history. Never mind - this is better than nothing,
                 // for diagnostic purposes.
-                Console.Write("{0} {1} {2} {3}\n",
+                writer.Write("{0} {1} {2} {3}\n",
                     transition.Value.ToString("yyyy-MM-dd HH:mm:ss'Z'", CultureInfo.InvariantCulture),
                     (offset.Ticks >= 0 ? "+" : "-") + offset.ToString("hh':'mm':'ss", CultureInfo.InvariantCulture),
                     isDaylight ? "daylight" : "standard",
