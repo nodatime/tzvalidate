@@ -22,6 +22,9 @@ namespace NodaTime.TzValidate.ZicDump
         [Option("s", "source", Required = true, HelpText = "Data source - a single file, or a directory")]
         public string Source { get; set; }
 
+        [Option("o", "output", Required = false, HelpText = "Output file (defaults to writing to the console")]
+        public string OutputFile { get; set; }
+
         [Option("z", "zone", Required = false, HelpText = "Zone ID, to dump a single time zone")]
         public string ZoneId { get; set; }
 

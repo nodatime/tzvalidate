@@ -25,23 +25,26 @@ namespace NodaTime.TzValidate.ZicDump
                 return 1;
             }
 
-            var file = options.Source;
-            if (File.Exists(file))
+            using (var output = options.OutputFile == null ? Console.Out : File.CreateText(options.OutputFile))
             {
-                ProcessFile(file, file, options, Console.Out);
-            }
-            else if (Directory.Exists(file))
-            {
-                var writer = new StringWriter();
-                ProcessDirectory(file, options, writer);
-                var text = writer.ToString();
-                WriteHeaders(text, options, Console.Out);
-                Console.Write(text);
-            }
-            else
-            {
-                Console.Error.WriteLine($"File not found: {file}");
-                return 1;
+                var file = options.Source;
+                if (File.Exists(file))
+                {
+                    ProcessFile(file, file, options, output);
+                }
+                else if (Directory.Exists(file))
+                {
+                    var writer = new StringWriter();
+                    ProcessDirectory(file, options, writer);
+                    var text = writer.ToString();
+                    WriteHeaders(text, options, output);
+                    output.Write(text);
+                }
+                else
+                {
+                    Console.Error.WriteLine($"File not found: {file}");
+                    return 1;
+                }
             }
             return 0;
         }
