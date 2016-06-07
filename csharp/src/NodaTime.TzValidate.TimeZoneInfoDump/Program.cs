@@ -24,24 +24,26 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
                 return 1;
             }
 
-            if (options.ZoneId != null)
+            using (var output = options.OutputFile == null ? Console.Out : File.CreateText(options.OutputFile))
             {
-                var zone = TimeZoneInfo.FindSystemTimeZoneById(options.ZoneId);
-                Dump(zone, options, Console.Out);
-            }
-            else
-            {
-                var writer = new StringWriter();
-                var zones = TimeZoneInfo.GetSystemTimeZones().OrderBy(zone => zone.Id, StringComparer.Ordinal);
-                foreach (var zone in zones)
+                if (options.ZoneId != null)
                 {
-                    Dump(zone, options, writer);
+                    var zone = TimeZoneInfo.FindSystemTimeZoneById(options.ZoneId);
+                    Dump(zone, options, output);
                 }
-                var text = writer.ToString();
-                WriteHeaders(text, options, Console.Out);
-                Console.Write(text);
+                else
+                {
+                    var writer = new StringWriter();
+                    var zones = TimeZoneInfo.GetSystemTimeZones().OrderBy(zone => zone.Id, StringComparer.Ordinal);
+                    foreach (var zone in zones)
+                    {
+                        Dump(zone, options, writer);
+                    }
+                    var text = writer.ToString();
+                    WriteHeaders(text, options, output);
+                    output.Write(text);
+                }
             }
-
             return 0;
         }
 

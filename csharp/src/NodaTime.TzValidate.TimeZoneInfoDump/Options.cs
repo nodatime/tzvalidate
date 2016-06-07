@@ -24,7 +24,10 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
 
         [Option("v", "version", Required = false, HelpText = "Data version, if known")]
         public string Version { get; set; }
-        
+
+        [Option("o", "output", Required = false, HelpText = "Output file (defaults to writing to the console")]
+        public string OutputFile { get; set; }
+
         [HelpOption(HelpText = "Display this help screen.")]
         public string GetUsage()
         {
