@@ -5,7 +5,6 @@
 package org.nodatime.tzvalidate;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -13,51 +12,41 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneRules;
+import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.cli.ParseException;
 
-public final class Java8Dump implements ZoneDumper {
-    private static final DateTimeFormatter INSTANT_FORMAT = DateTimeFormatter
-        .ofPattern("yyyy-MM-dd HH:mm:ss'Z'", Locale.US)
-        .withZone(ZoneOffset.UTC);
-    private static final DateTimeFormatter ZONE_NAME_FORMAT = DateTimeFormatter.ofPattern("zzz", Locale.US);
-
+public final class Java8Dump implements ZoneTransitionsProvider {
     public static void main(String[] args) throws IOException, ParseException {
         DumpCoordinator.dump(new Java8Dump(), false, args);
     }
 
-    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
-        writer.write(id + "\n");
+    @Override
+    public ZoneTransitions getTransitions(String id, int fromYear, int toYear) {
         ZoneId zone = ZoneId.of(id);
+        ZoneRules rules = zone.getRules();
+        DateTimeFormatter nameFormat = DateTimeFormatter.ofPattern("zzz", Locale.US);
         // Instant.MIN can't be formatted, so let's just do "quite a long time ago"
         Instant early = ZonedDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
-        writer.write("Initially:           " + formatOffsetAndName(zone, early) + "\n");  
+        ZoneTransitions transitions = new ZoneTransitions(id);
+        transitions.addTransition(null, rules.getOffset(early).getTotalSeconds() * 1000,
+                rules.isDaylightSavings(early),
+                nameFormat.format(early.atZone(zone)));
 
         Instant start = ZonedDateTime.of(fromYear, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
         Instant end = ZonedDateTime.of(toYear, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
         
-        ZoneRules rules = zone.getRules();
         ZoneOffsetTransition transition = rules.nextTransition(start.minusNanos(1));
         while (transition != null && transition.getInstant().isBefore(end)) {
-            writer.write(INSTANT_FORMAT.format(transition.getInstant()) + " "
-                + formatOffsetAndName(zone, transition.getInstant()) + "\n");
-            transition = rules.nextTransition(transition.getInstant());
+            Instant instant = transition.getInstant();
+            transitions.addTransition(new Date(instant.toEpochMilli()),
+                rules.getOffset(instant).getTotalSeconds() * 1000,
+                rules.isDaylightSavings(instant),
+                nameFormat.format(instant.atZone(zone)));
+            transition = rules.nextTransition(instant);
         }
-    }
-    
-    private static String formatOffsetAndName(ZoneId zone, Instant instant) {
-        ZoneRules rules = zone.getRules();
-        ZoneOffset offset = rules.getOffset(instant);
-        long seconds = offset.getTotalSeconds();
-        String sign = seconds < 0 ? "-" : "+";
-        if (seconds < 0) {
-            seconds = -seconds;
-        }
-        return String.format("%s%02d:%02d:%02d %s %s",
-            sign, seconds / 3600, (seconds / 60) % 60, seconds % 60,
-            rules.getDaylightSavings(instant).isZero() ? "standard" : "daylight",
-            ZONE_NAME_FORMAT.format(instant.atZone(zone)));
+        return transitions;
     }
 
     @Override

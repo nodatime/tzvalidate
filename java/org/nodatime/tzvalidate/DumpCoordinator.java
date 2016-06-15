@@ -19,16 +19,16 @@ import org.apache.commons.cli.ParseException;
 
 public class DumpCoordinator {
 
-    public static void dump(ZoneDumper dumper, boolean supportsSource, String[] args) throws ParseException, IOException {
-        DumpOptions options = DumpOptions.parse(dumper.getClass().getSimpleName(), args, supportsSource);
+    public static void dump(ZoneTransitionsProvider provider, boolean supportsSource, String[] args) throws ParseException, IOException {
+        DumpOptions options = DumpOptions.parse(provider.getClass().getSimpleName(), args, supportsSource);
         if (options == null) {
             return;
         }
-        dumper.initialize(options);
+        provider.initialize(options);
 
         List<String> zoneIds = new ArrayList<>();
         // Urgh... not quite worth using Guava just for Iterables... 
-        for (String id : dumper.getZoneIds()) {
+        for (String id : provider.getZoneIds()) {
             zoneIds.add(id);
         }
         Collections.sort(zoneIds);
@@ -36,6 +36,7 @@ public class DumpCoordinator {
         int fromYear = options.getFromYear();
         int toYear = options.getToYear();
         String zoneId = options.getZoneId();
+        boolean includeAbbreviations = options.includeAbbreviations();
         
         // Single zone dump
         if (zoneId != null) {
@@ -44,25 +45,25 @@ public class DumpCoordinator {
                 return;
             }
             try (Writer writer = new OutputStreamWriter(System.out, StandardCharsets.UTF_8)) {
-                dumper.dumpZone(zoneId, fromYear, toYear, writer);
+                provider.getTransitions(zoneId, fromYear, toYear).writeTo(writer, includeAbbreviations);
             }
         }
         
         // All zones, with headers.
         Writer bodyWriter = new StringWriter();
         for (String id : zoneIds) {
-            dumper.dumpZone(id, fromYear, toYear, bodyWriter);
+            provider.getTransitions(id, fromYear, toYear).writeTo(bodyWriter, includeAbbreviations);
             bodyWriter.write("\n");
         }
         bodyWriter.flush();
         String text = bodyWriter.toString();
         try (Writer overallWriter = new OutputStreamWriter(System.out, StandardCharsets.UTF_8)) {
-            writeHeaders(text, dumper, options, overallWriter);
+            writeHeaders(text, provider, options, overallWriter);
             overallWriter.write(text);
         }
     }
     
-    private static void writeHeaders(String text, ZoneDumper dumper, DumpOptions options, Writer writer)
+    private static void writeHeaders(String text, ZoneTransitionsProvider dumper, DumpOptions options, Writer writer)
         throws IOException
     {
         String version = options.getVersion();

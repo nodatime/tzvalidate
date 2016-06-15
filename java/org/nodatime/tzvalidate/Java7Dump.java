@@ -5,7 +5,7 @@
 package org.nodatime.tzvalidate;
 
 import java.io.IOException;
-import java.io.Writer;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -17,24 +17,21 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.ParseException;
 
-public final class Java7Dump implements ZoneDumper {
+public final class Java7Dump implements ZoneTransitionsProvider {
     
     private static final long ONE_DAY_MILLIS = TimeUnit.DAYS.toMillis(1);
-    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
-    private static final SimpleDateFormat INSTANT_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss'Z'", Locale.US);
-    private static final SimpleDateFormat ZONE_NAME_FORMAT = new SimpleDateFormat("zz", Locale.US);
-    
-    static {
-        INSTANT_FORMAT.setTimeZone(UTC);
-    }
+    private static final TimeZone UTC = TimeZone.getTimeZone("UTC");    
 
     public static void main(String[] args) throws IOException, ParseException {
         DumpCoordinator.dump(new Java7Dump(), false,  args);
     }
 
-    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
-        writer.write(id + "\n");
-        
+    @Override
+    public ZoneTransitions getTransitions(String id, int fromYear, int toYear) {
+        TimeZone zone = TimeZone.getTimeZone(id);
+        DateFormat nameFormat = new SimpleDateFormat("zzz", Locale.US);
+        nameFormat.setTimeZone(zone);
+
         // Given the way we find transitions, we really don't want to go
         // from any earlier than this...
         if (fromYear < 1800) {
@@ -49,18 +46,24 @@ public final class Java7Dump implements ZoneDumper {
         long end = calendar.getTimeInMillis();
         calendar.set(1, 0, 1, 0, 0, 0);
         long early = calendar.getTimeInMillis();
+        Date date = new Date(early);
         
-        TimeZone zone = TimeZone.getTimeZone(id);
-        ZONE_NAME_FORMAT.setTimeZone(zone);
-        writer.write("Initially:           " + formatOffsetAndName(zone, early) + "\n");  
+        ZoneTransitions transitions = new ZoneTransitions(id);
+        transitions.addTransition(null,
+            zone.getOffset(early),
+            zone.inDaylightTime(date),
+            nameFormat.format(date));
         
         Long transition = getNextTransition(zone, start - 1, end);
-        Date date = new Date(); // Reused in the loop
         while (transition != null) {
             date.setTime(transition);
-            writer.write(INSTANT_FORMAT.format(date) + " " + formatOffsetAndName(zone, transition) + "\n");
+            transitions.addTransition(date,
+                zone.getOffset(transition),
+                zone.inDaylightTime(date),
+                nameFormat.format(date));
             transition = getNextTransition(zone, transition, end);
         }
+        return transitions;
     }
     
     /**
@@ -104,20 +107,6 @@ public final class Java7Dump implements ZoneDumper {
         return null;
     }
 
-    private static String formatOffsetAndName(TimeZone zone, long instant) {
-        Date date = new Date(instant);
-        int offsetMilliseconds = zone.getOffset(instant);
-        long seconds = offsetMilliseconds / 1000;
-        String sign = seconds < 0 ? "-" : "+";
-        if (seconds < 0) {
-            seconds = -seconds;
-        }
-        return String.format("%s%02d:%02d:%02d %s %s",
-            sign, seconds / 3600, (seconds / 60) % 60, seconds % 60,
-            zone.inDaylightTime(date) ? "daylight" : "standard",
-            ZONE_NAME_FORMAT.format(date));
-    }
-
     @Override
     public void initialize(DumpOptions options) {
         // No-op
@@ -125,6 +114,7 @@ public final class Java7Dump implements ZoneDumper {
 
     @Override
     public Iterable<String> getZoneIds() {
+    	// TODO: Remove the abbreviation IDs which aren't actually in TZDB.
         return Arrays.asList(TimeZone.getAvailableIDs());
     }
 }
