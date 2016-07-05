@@ -1,5 +1,11 @@
 language: csharp
 
+install:
+  - sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
+  - sudo apt-key adv --keyserver apt-mo.trafficmanager.net --recv-keys 417A0893
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install dotnet-dev-1.0.0-preview2-003121
+
 before_script:
   - openssl aes-256-cbc -K $encrypted_e86a7a1dbeca_key -iv $encrypted_e86a7a1dbeca_iv -in .travisdeploykey.enc -out .travisdeploykey -d
   - chmod go-rwx .travisdeploykey
