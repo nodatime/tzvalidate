@@ -27,14 +27,12 @@ public final class Java8Dump implements ZoneTransitionsProvider {
         ZoneId zone = ZoneId.of(id);
         ZoneRules rules = zone.getRules();
         DateTimeFormatter nameFormat = DateTimeFormatter.ofPattern("zzz", Locale.US);
-        // Instant.MIN can't be formatted, so let's just do "quite a long time ago"
-        Instant early = ZonedDateTime.of(1, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
         ZoneTransitions transitions = new ZoneTransitions(id);
-        transitions.addTransition(null, rules.getOffset(early).getTotalSeconds() * 1000,
-                rules.isDaylightSavings(early),
-                nameFormat.format(early.atZone(zone)));
 
         Instant start = ZonedDateTime.of(fromYear, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
+        transitions.addTransition(null, rules.getOffset(start).getTotalSeconds() * 1000,
+            rules.isDaylightSavings(start),
+            nameFormat.format(start.atZone(zone)));
         Instant end = ZonedDateTime.of(toYear, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC).toInstant();
         
         ZoneOffsetTransition transition = rules.nextTransition(start.minusNanos(1));

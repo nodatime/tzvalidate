@@ -44,13 +44,11 @@ public final class Java7Dump implements ZoneTransitionsProvider {
         long start = calendar.getTimeInMillis();
         calendar.set(toYear, 0, 1, 0, 0, 0);
         long end = calendar.getTimeInMillis();
-        calendar.set(1, 0, 1, 0, 0, 0);
-        long early = calendar.getTimeInMillis();
-        Date date = new Date(early);
+        Date date = new Date(start);
         
         ZoneTransitions transitions = new ZoneTransitions(id);
         transitions.addTransition(null,
-            zone.getOffset(early),
+            zone.getOffset(start),
             zone.inDaylightTime(date),
             nameFormat.format(date));
         
