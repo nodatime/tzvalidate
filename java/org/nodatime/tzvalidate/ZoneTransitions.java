@@ -26,6 +26,7 @@ public final class ZoneTransitions {
     /**
      * Adds a transition for this zone.
      * @param when The instant at which the transition occurs, or null for the initial state. This is cloned.
+     *  Use a value of null for the initial offset.
      * @param offsetMilliseconds The UTC offset in milliseconds after the transition (positive for offsets ahead of UTC; negative for offsets behind UTC)
      * @param daylight Whether daylight saving is in effect after the transition
      * @param abbreviation The time zone abbreviation after the transition
