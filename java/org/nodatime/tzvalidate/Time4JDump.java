@@ -4,62 +4,54 @@
 
 package org.nodatime.tzvalidate;
 
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import org.apache.commons.cli.ParseException;
+
 import net.time4j.Moment;
 import net.time4j.PlainTimestamp;
 import net.time4j.format.expert.ChronoFormatter;
-import net.time4j.format.expert.PatternType;
 import net.time4j.scale.TimeScale;
 import net.time4j.tz.TZID;
 import net.time4j.tz.Timezone;
 import net.time4j.tz.TransitionHistory;
-import net.time4j.tz.ZonalOffset;
 import net.time4j.tz.ZonalTransition;
-import org.apache.commons.cli.ParseException;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Locale;
-import java.util.stream.Collectors;
-
-public final class Time4JDump implements ZoneDumper {
-    private static final ChronoFormatter<Moment> MOMENT_FORMATTER =
-        ChronoFormatter.ofMomentPattern("uuuu-MM-dd HH:mm:ssXXX", PatternType.CLDR, Locale.ROOT, ZonalOffset.UTC);
-
+public final class Time4JDump implements ZoneTransitionsProvider {
     private static final ChronoFormatter<Moment> ZONE_NAME_FORMATTER =
         ChronoFormatter.setUp(Moment.axis(), Locale.ROOT).addLiteral(' ').addShortTimezoneName().build();
-
-    // actually unused because it relies on non-historic JDK-data (originating from CLDR)
-    // and not on historic abbreviations contained in TZDB (which are partially invented however)
-    private final boolean printingNames = false;
 
     public static void main(String[] args) throws IOException, ParseException {
         DumpCoordinator.dump(new Time4JDump(), false, args);
     }
-
-    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
-        writer.write(id + "\n");
-
+    
+    @Override
+    public ZoneTransitions getTransitions(String id, int fromYear, int toYear) {
+        ZoneTransitions transitions = new ZoneTransitions(id);
         Timezone tz = Timezone.of(id);
+        ChronoFormatter<Moment> formatter = ZONE_NAME_FORMATTER.with(tz);
         TransitionHistory history = tz.getHistory();
-
-        String name = "";
-        if (this.printingNames) {
-            name = " -"; // we consider the era before first recorded transition as having no timezone concept at all
-        }
-        writer.write("Initially:          " + format(history.getInitialOffset()) + " standard" + name + "\n");
-
         Moment start = PlainTimestamp.of(fromYear, 1, 1, 0, 0, 0).atUTC();
         Moment end = PlainTimestamp.of(toYear, 1, 1, 0, 0, 0).atUTC();
+        Moment initialMoment = start.minus(1, TimeUnit.NANOSECONDS);
+        transitions.addTransition(null,
+            tz.getOffset(initialMoment).getIntegralAmount() * 1000L,
+            tz.isDaylightSaving(initialMoment),
+            formatter.format(initialMoment));
 
         for (ZonalTransition transition : history.getTransitions(start, end)) {
             Moment transitionTime = Moment.of(transition.getPosixTime(), TimeScale.POSIX);
-            ZonalOffset offsetAfter = ZonalOffset.ofTotalSeconds(transition.getTotalOffset());
-            String dstInfo = transition.isDaylightSaving() ? " daylight" : " standard";
-            if (this.printingNames) {
-                name = ZONE_NAME_FORMATTER.with(tz).format(transitionTime);
-            }
-            writer.write(MOMENT_FORMATTER.format(transitionTime) + format(offsetAfter) + dstInfo + name + "\n");
+            transitions.addTransition(
+                new Date(transitionTime.getPosixTime() * 1000L),
+                transition.getTotalOffset() * 1000L,
+                transition.isDaylightSaving(),
+                formatter.format(transitionTime));
         }
+        return transitions;
     }
 
     @Override
@@ -71,13 +63,4 @@ public final class Time4JDump implements ZoneDumper {
     public Iterable<String> getZoneIds() {
         return Timezone.getAvailableIDs().stream().map(TZID::canonical).collect(Collectors.toList());
     }
-
-    private static String format(ZonalOffset offset) {
-        String s = " " + offset.toString();
-        if (offset.getAbsoluteSeconds() == 0) {
-            s += ":00";
-        }
-        return s;
-    }
-
 }

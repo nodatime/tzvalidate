@@ -4,6 +4,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/icu4j-57_1.jar"/>
-	<classpathentry kind="lib" path="lib/joda-time-2.9.3.jar"/>
+	<classpathentry kind="lib" path="lib/joda-time-2.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/time4j-core-4.17.jar"/>
+	<classpathentry kind="lib" path="lib/time4j-i18n-4.17.jar"/>
+	<classpathentry kind="lib" path="lib/time4j-olson-4.17.jar"/>
+	<classpathentry kind="lib" path="lib/time4j-tzdata-1.10-2016f.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

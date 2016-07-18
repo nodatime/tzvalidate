@@ -5,12 +5,11 @@
 package org.nodatime.tzvalidate;
 
 import java.io.IOException;
-import java.io.Writer;
 
 /**
  * Represents the ability to dump the details of a single time zone.
  */
-public interface ZoneDumper {
+public interface ZoneTransitionsProvider {
     /**
      * Initializes the dumper with the given options.
      */
@@ -23,11 +22,11 @@ public interface ZoneDumper {
     Iterable<String> getZoneIds();
     
     /**
-     * Dumps the given time zone information, from the given start
-     * year (inclusive) to the given end year (exclusive). Lines should be
-     * terminated with a line-feed character (U+000A). No blank line should be
-     * written after the zone.
+     * Retrieves the time zone transitions for the specified zone ID.
+     * @param id ID of the zone to retrieve transitions for
+     * @param fromYear First year (inclusive) in which to find transitions
+     * @param toYear End year (exclusive) in which to find transitions
+     * @return the transitions for the zone, in the given year range
      */
-    void dumpZone(String id, int fromYear, int toYear, Writer writer)
-        throws IOException;
+    ZoneTransitions getTransitions(String id, int fromYear, int toYear);
 }

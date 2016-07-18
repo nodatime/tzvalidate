@@ -20,14 +20,16 @@ public final class DumpOptions {
     private final int toYear;
     private final String source;
     private final String version;
+    private final boolean includeAbbreviations;
 
     private DumpOptions(String zoneId, int fromYear, int toYear, String source,
-        String version) {
+        String version, boolean includeAbbreviations) {
         this.zoneId = zoneId;
         this.fromYear = fromYear;
         this.toYear = toYear;
         this.source = source;
         this.version = version;
+        this.includeAbbreviations = includeAbbreviations;
     }
 
     public String getZoneId() {
@@ -49,6 +51,10 @@ public final class DumpOptions {
     public String getVersion() {
         return version;
     }
+    
+    public boolean includeAbbreviations() {
+    	return includeAbbreviations;
+    }
 
     public static DumpOptions parse(String name, String[] args,
         boolean includeSourceOption) throws ParseException {
@@ -60,6 +66,7 @@ public final class DumpOptions {
         options.addOption("v", "version", true,
             "Version to report in output headers.");
         options.addOption("z", "zone", true, "Single zone ID to dump.");
+        options.addOption("noabbr", "Suppress abbreviations in output");
         options.addOption("?", "h", false, "Print help.");
         if (includeSourceOption) {
             options.addOption("s", "source", true, "Source of time zone data");
@@ -73,7 +80,10 @@ public final class DumpOptions {
         }
         return new DumpOptions(cmd.getOptionValue("z"),
             cmd.hasOption("f") ? Integer.parseInt(cmd.getOptionValue("f")) : 1,
-            cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t"))
-                : 2035, cmd.getOptionValue("s"), cmd.getOptionValue("v"));
+            cmd.hasOption("t") ? Integer.parseInt(cmd.getOptionValue("t")) : 2035,
+            cmd.getOptionValue("s"),
+            cmd.getOptionValue("v"),
+            // TODO: Parse true/false values
+            !cmd.hasOption("noabbr"));
     }
 }

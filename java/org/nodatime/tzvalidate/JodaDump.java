@@ -8,8 +8,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Writer;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,15 +22,9 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.tz.ZoneInfoCompiler;
 
-public final class JodaDump implements ZoneDumper {
+public final class JodaDump implements ZoneTransitionsProvider {
 
     private Map<String, DateTimeZone> zones;
-    
-    private static final DateTimeFormatter INSTANT_FORMAT = DateTimeFormat
-        .forPattern("yyyy-MM-dd HH:mm:ss'Z'")
-        .withZone(DateTimeZone.UTC);
-    private static final DateTimeFormatter ZONE_NAME_FORMAT = DateTimeFormat
-        .forPattern("zz");
 
     private static final List<String> KNOWN_FILES = Arrays.asList(
         "africa", "antarctica",
@@ -64,51 +58,38 @@ public final class JodaDump implements ZoneDumper {
         return zones;
     }
 
-    public void dumpZone(String id, int fromYear, int toYear, Writer writer) throws IOException {
-        writer.write(id + "\n");
+    @Override
+    public ZoneTransitions getTransitions(String id, int fromYear, int toYear) {
         DateTimeZone zone = zones.get(id);
         // Note that the ID we fetched isn't always the same as DateTimeZone.getID()
-        DateTimeFormatter nameFormatter = ZONE_NAME_FORMAT.withZone(zone);
-        
-        String line = String.format("Initially:           %s %s %s\n",
-            printOffset(zone.getOffset(Long.MIN_VALUE)),
-            zone.isStandardOffset(Long.MIN_VALUE) ? "standard" : "daylight",
-            zone.getShortName(Long.MIN_VALUE));
-        writer.write(line);
-                
+        DateTimeFormatter nameFormatter = DateTimeFormat
+            .forPattern("zz").withZone(zone);
+                        
         Instant start = new DateTime(fromYear, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
         Instant end = new DateTime(toYear, 1, 1, 0, 0, DateTimeZone.UTC).toInstant();
+        ZoneTransitions transitions = new ZoneTransitions(id);
+        long now = start.getMillis();
+        transitions.addTransition(null,
+            zone.getOffset(now),
+            !zone.isStandardOffset(now),
+            nameFormatter.print(now));
 
-        long now = zone.nextTransition(start.getMillis());
+        now = zone.nextTransition(now);
         if (now == start.getMillis()) {
-            return;
+            return transitions;
         }
         while (now < end.getMillis()) {
-            int standardOffset = zone.getStandardOffset(now);
-            int wallOffset = zone.getOffset(now);
-            line = String.format("%s %s %s %s\n",
-                              INSTANT_FORMAT.print(now),
-                              printOffset(wallOffset),
-                              standardOffset == wallOffset ? "standard" : "daylight",
-                              nameFormatter.print(now));
-            writer.write(line);
-                              
+            transitions.addTransition(new Date(now),
+                zone.getOffset(now),
+                !zone.isStandardOffset(now),
+                nameFormatter.print(now));                              
             long next = zone.nextTransition(now);
             if (next <= now) {
                 break;
             }
             now = next;
         }
-    }
-
-    private static String printOffset(long millis) {
-        long seconds = Math.abs(millis) / 1000;
-        if (seconds < 0) {
-            seconds = -seconds;
-        }
-        String sign = millis < 0 ? "-" : "+";
-        return String.format("%s%02d:%02d:%02d", sign, seconds / 3600,
-                (seconds / 60) % 60, seconds % 60);
+        return transitions;
     }
 
     @Override
