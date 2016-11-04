@@ -47,12 +47,12 @@ namespace NodaTime.TzValidate.ZicDump
         [HelpOption(HelpText = "Display this help screen.")]
         public string GetUsage()
         {
-            var help = new HelpText(new HeadingInfo("ZicDump"))
+            var help = new HelpText(new HeadingInfo("NodaTime.TzValidate.ZicDump"))
             {
                 AdditionalNewLineAfterOption = true,
                 Copyright = new CopyrightInfo("Jon Skeet", 2015)
             };
-            help.AddPreOptionsLine("Usage: dnx run -s data-source [-f from-year] [-t to-year] [-i true/false] [-z zone id] [-v data version]");
+            help.AddPreOptionsLine("Usage: dotnet run -- -s data-source [-f from-year] [-t to-year] [-i true/false] [-z zone id] [-v data version]");
             help.AddOptions(this);
             return help;
         }
