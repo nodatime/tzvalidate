@@ -31,15 +31,14 @@ namespace NodaTime.TzValidate.TimeZoneInfoDump
         [HelpOption(HelpText = "Display this help screen.")]
         public string GetUsage()
         {
-            var help = new HelpText(new HeadingInfo("ZicDump"))
+            var help = new HelpText(new HeadingInfo("NodaTime.TzValidate.TimeZoneInfoDump"))
             {
                 AdditionalNewLineAfterOption = true,
                 Copyright = new CopyrightInfo("Jon Skeet", 2015)
             };
-            help.AddPreOptionsLine("Usage: dnx run [-f from-year] [-t to-year] [-z zone id]");
+            help.AddPreOptionsLine("Usage: dotnet run -- [-f from-year] [-t to-year] [-z zone id]");
             help.AddOptions(this);
             return help;
         }
-
     }
 }
