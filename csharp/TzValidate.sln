@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{567D9990-61B7-429C-9580-469BEAD0BB5B}"
 EndProject
@@ -17,6 +17,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.TrimNames", "src\NodaTime.TzValidate.TrimNames\NodaTime.TzValidate.TrimNames.xproj", "{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.DnxCommandLine", "src\NodaTime.TzValidate.DnxCommandLine\NodaTime.TzValidate.DnxCommandLine.xproj", "{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "NodaTime.TzValidate.ConvertTzs", "src\NodaTime.TzValidate.ConvertTzs\NodaTime.TzValidate.ConvertTzs.xproj", "{93882924-DD30-4056-81A1-D0AD572715F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93882924-DD30-4056-81A1-D0AD572715F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93882924-DD30-4056-81A1-D0AD572715F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93882924-DD30-4056-81A1-D0AD572715F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93882924-DD30-4056-81A1-D0AD572715F2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,5 +55,6 @@ Global
 		{13782A5D-8507-4C6B-BB32-45CF6088D227} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
 		{F451DDD5-5F0E-49C8-B7C6-3B220DF799B4} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
 		{94FC3E7E-714C-4B40-ADD0-C2F5912D0C0F} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
+		{93882924-DD30-4056-81A1-D0AD572715F2} = {567D9990-61B7-429C-9580-469BEAD0BB5B}
 	EndGlobalSection
 EndGlobal
