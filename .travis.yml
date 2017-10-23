@@ -14,5 +14,6 @@ before_script:
     
 script:
   - set -e
+  - cc --version
   - scripts/detect_changes.sh
   - if [ -d tmp/gh-pages ]; then git -C tmp/gh-pages push origin gh-pages; fi
