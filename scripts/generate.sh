@@ -31,6 +31,4 @@ done
 
 popd
 
-dotnet restore csharp/src
-dotnet build csharp/src/NodaTime.TzValidate.ZicDump
-dotnet run -p csharp/src/NodaTime.TzValidate.ZicDump -- -s $OUTDIR/data -v $1 -o $OUTDIR/tzdata$1.txt
+dotnet run -p csharp/NodaTime.TzValidate.ZicDump -- -s $OUTDIR/data -v $1 -o $OUTDIR/tzdata$1.txt
