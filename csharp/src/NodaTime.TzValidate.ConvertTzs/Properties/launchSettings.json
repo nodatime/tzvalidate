@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "NodaTime.TzValidate.ConvertTzs": {
-      "commandName": "Project",
-      "commandLineArgs": "-s c:\\users\\skeet\\Downloads\\tzdb-2016i\\to2050.tzs -o output.txt"
-    }
-  }
-}
