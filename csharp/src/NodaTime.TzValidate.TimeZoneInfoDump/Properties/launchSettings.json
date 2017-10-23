@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "NodaTime.TzValidate.TimeZoneInfoDump": {
-      "commandName": "NodaTime.TzValidate.TimeZoneInfoDump",
-      "commandLineArgs": "--help"
-    }
-  }
-}
