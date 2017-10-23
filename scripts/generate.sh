@@ -18,7 +18,7 @@ mkdir $1
 wget -q -O - https://www.iana.org/time-zones/repository/releases/tzdata$1.tar.gz | tar xz
 wget -q -O - https://www.iana.org/time-zones/repository/releases/tzcode$1.tar.gz | tar xz
 
-make -s
+make -s CFLAGS=-DHAVE_SNPRINTF
 
 FILES=
 for i in africa antarctica asia australasia europe northamerica southamerica pacificnew etcetera backward systemv; do
