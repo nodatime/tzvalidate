@@ -1,6 +1,6 @@
 language: csharp
 dist: trusty
-compiler: clang
+compiler: gcc
 dotnet: 2.0.0
 mono: none
 
