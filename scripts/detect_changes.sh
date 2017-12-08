@@ -1,8 +1,10 @@
 #!/bin/bash
 
 set -ex
-
-RELEASE=$(curl -s https://www.iana.org/time-zones | grep -oP '(?<=\/time-zones\/repository\/releases\/tzdata)[A-Za-z0-9]+')
+RELEASE=$(curl -s https://www.iana.org/time-zones | \
+  grep -oP '\<span id="version"\>[A-Za-z0-9]+</span\>'| \
+  sed 's/<span id="version">//g' | \
+  sed 's/<\/span>//g')
 HTML=`wget -q -O- https://nodatime.github.io/tzvalidate/`
 MATCH=">${RELEASE}<"
 
