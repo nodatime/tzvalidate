@@ -17,9 +17,9 @@ namespace NodaTime.TzValidate.ConvertTzs
     {
         private static Regex TzPattern = new Regex("^TZ=\"([^\"]*)\"$");
         private static Regex InitialTransitionPattern = new Regex(
-            @"^-\t-\t(?<offset>[+-]\d{2}(?::\d{2}(?::\d{2})?)?)(?:\t(?<abbr>[^\t]*)(?<isdst>\t1)?)?$");
+            @"^-\t-\t(?<offset>[+-]\d{2}(?:\d{2}(?:\d{2})?)?)(?:\t(?<abbr>[^\t]*)(?<isdst>\t1)?)?$");
         private static Regex RegularTransitionPattern = new Regex(
-            @"^(?<date>\d{4}-\d{2}-\d{2})\t(?<time>\d{2}(?::\d{2}(?::\d{2})?)?)\t(?<offset>[+-]\d{2}(?::\d{2}(?::\d{2})?)?)(?:\t(?<abbr>[^\t]*)(?<isdst>\t1)?)?$");
+            @"^(?<date>\d{4}-\d{2}-\d{2})\t(?<time>\d{2}(?::\d{2}(?::\d{2})?)?)\t(?<offset>[+-]\d{2}(?:\d{2}(?:\d{2})?)?)(?:\t(?<abbr>[^\t]*)(?<isdst>\t1)?)?$");
 
         public IReadOnlyDictionary<string, string> Aliases { get; }
         public IEnumerable<TzsZone> Zones { get; }
@@ -104,14 +104,29 @@ namespace NodaTime.TzValidate.ConvertTzs
         private static TimeSpan ParseOffset(string offset)
         {
             bool negative = offset[0] == '-';
-            offset = ToHoursMinutesSeconds(offset.Substring(1));
-            TimeSpan parsed = TimeSpan.ParseExact(offset, "hh':'mm':'ss", CultureInfo.InvariantCulture);
+            offset = offset.Substring(1);
+            if (offset.Length == 2)
+            {
+                offset += "00";
+            }
+            if (offset.Length == 4)
+            {
+                offset += "00";
+            }
+            TimeSpan parsed = TimeSpan.ParseExact(offset, "hhmmss", CultureInfo.InvariantCulture);
             return negative ? -parsed : parsed;
         }
 
         private static DateTime ParseDateAndTime(string date, string time)
         {
-            time = ToHoursMinutesSeconds(time);
+            if (time.Length == 2)
+            {
+                time += ":00";
+            }
+            if (time.Length == 5)
+            {
+                time += ":00";
+            }
             return DateTime.ParseExact($"{date} {time}", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         }
 
@@ -126,19 +141,6 @@ namespace NodaTime.TzValidate.ConvertTzs
                 return offset.Trim('"');
             }
             return "-00";
-        }
-
-        private static string ToHoursMinutesSeconds(string text)
-        {
-            if (text.Length == 2)
-            {
-                text += ":00";
-            }
-            if (text.Length == 5)
-            {
-                text += ":00";
-            }
-            return text;
-        }
+        }        
     }
 }
