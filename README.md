@@ -1,3 +1,5 @@
+[![Travis build Status](https://travis-ci.org/nodatime/tzvalidate.svg?branch=master)](https://travis-ci.org/nodatime/tzvalidate)
+
 This repository is a temporary home for code to generate "validation" text files
 for the IANA-hosted time zone data.
 
