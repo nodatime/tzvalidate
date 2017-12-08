@@ -46,14 +46,14 @@ Additional command line options:
 Reports initial offset and all transitions within bounds. Code exists in the main Noda Time repository,
 in order to use an assembly which isn't exported in releases.
 
-Sample command lines:
+Sample command lines (from in the C# source directory):
 
-- `NodaTime.TzValidate.NodaDump -s http://nodatime.org/tzdb/tzdb2015e.nzd`
-- `NodaTime.TzValidate.NodaDump -s www\tzdb\tzdb2015e.nzd`
-- `NodaTime.TzValidate.NodaDump -s data\tzdb\2015e`
-- `NodaTime.TzValidate.NodaDump -s http://www.iana.org/time-zones/repository/releases/tzdata2015e.tar.gz`
-- `NodaTime.TzValidate.NodaDump -s downloads\tzdata2015e.tar.gz`
-- `NodaTime.TzValidate.NodaDump -s http://nodatime.org/tzdb/tzdb2015e.nzd -f 1900 -t 2000`
+- `dotnet run -- -s http://nodatime.org/tzdb/tzdb2015e.nzd`
+- `dotnet run -- -s www\tzdb\tzdb2015e.nzd`
+- `dotnet run -- -s data\tzdb\2015e`
+- `dotnet run -- -s http://www.iana.org/time-zones/repository/releases/tzdata2015e.tar.gz`
+- `dotnet run -- -s downloads\tzdata2015e.tar.gz`
+- `dotnet run -- -s http://nodatime.org/tzdb/tzdb2015e.nzd -f 1900 -t 2000`
 
 TimeZoneInfo (.NET)
 ----
@@ -85,6 +85,19 @@ Additional command line options:
   report a transition at the big bang; values are "true" or "false" - defaults to "true"
 
 Sample command line: `dnx run -s tzdb2015e`
+
+TZS
+---
+
+C# code to convert the TZS file included in the complete
+distribution file into tzvalidate format.
+
+Code: `csharp/src/NodaTime.TzValidate.ConvertTzs`
+
+Sample command line (from in the C# source directory):
+
+- `dotnet run -- -s https://data.iana.org/time-zones/releases/tzdb-2017c.tar.lz`
+- `dotnet run -- -s to2050.tzs -v 2017c`
 
 Java 7
 ----
