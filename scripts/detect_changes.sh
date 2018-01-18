@@ -1,11 +1,12 @@
 #!/bin/bash
 
-set -ex
+set -e
 RELEASE=$(curl -s https://www.iana.org/time-zones | \
   grep -oP '\<span id="version"\>[A-Za-z0-9]+</span\>'| \
   sed 's/<span id="version">//g' | \
   sed 's/<\/span>//g')
-HTML=`wget -q -O- https://nodatime.github.io/tzvalidate/`
+echo "Detected release ${RELEASE} at IANA"
+HTML=$(wget -q -O- https://nodatime.github.io/tzvalidate/)
 MATCH=">${RELEASE}<"
 
 if [[ $HTML == *$MATCH* ]]
