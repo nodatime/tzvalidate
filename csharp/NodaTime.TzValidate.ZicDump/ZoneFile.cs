@@ -106,10 +106,12 @@ namespace NodaTime.TzValidate.ZicDump
                 })
                 .Select(pair => new Transition(pair.timestamp, TimeSpan.FromSeconds(pair.type.Offset), pair.type.IsDst, pair.type.Abbreviation))
                 .ToList();
-            if (options.FakeInitialTransition && transitions.Count > 0 && transitions[0].Instant != null)
+            if (options.FakeInitialTransition && (transitions.Count == 0 || transitions[0].Instant != null))
             {
                 // Note: in some very odd cases (e.g. tzdata94f, MET) the first transition is into standard time.
                 // We'll still add one for the big bang here, and let the next part de-dupe.
+
+                // As of 2018f, fixed-offset time zones have no transitions at all. Fake one at the big bang.
 
                 // Work out the initial type according to the localtime man page:
                 // - First standard type (by transition type array) if there are any
