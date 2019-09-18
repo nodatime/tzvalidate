@@ -1,7 +1,7 @@
 language: csharp
 dist: trusty
 compiler: gcc
-dotnet: 2.0.0
+dotnet: 2.2.104
 mono: none
 
 before_script:
