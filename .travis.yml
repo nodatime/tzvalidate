@@ -1,5 +1,5 @@
 language: csharp
-dist: trusty
+dist: xenial
 compiler: gcc
 dotnet: 2.2.104
 mono: none
