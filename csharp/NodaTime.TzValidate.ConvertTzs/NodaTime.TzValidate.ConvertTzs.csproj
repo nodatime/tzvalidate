@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,7 +7,7 @@
   
   <ItemGroup>
     <ProjectReference Include="../NodaTime.TzValidate.CoreCommandLine/NodaTime.TzValidate.CoreCommandLine.csproj" />
-    <PackageReference Include="SharpCompress" Version="0.18.2" />
+    <PackageReference Include="SharpCompress" Version="0.24.0" />
   </ItemGroup>
 
 </Project>
