@@ -27,7 +27,7 @@ for i in africa antarctica asia australasia europe northamerica southamerica pac
   fi
 done
 
-./zic -y yearistype.sh -d ../data ${FILES}
+./zic -d ../data ${FILES}
 
 popd
 
