@@ -27,7 +27,7 @@ for i in africa antarctica asia australasia europe northamerica southamerica pac
   fi
 done
 
-./zic -d ../data ${FILES}
+./zic -b fat -d ../data ${FILES}
 
 popd
 
