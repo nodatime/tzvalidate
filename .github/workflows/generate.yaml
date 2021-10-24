@@ -1,0 +1,17 @@
+name: Generate
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Generate
+      run: scripts/detect_changes.sh
+
+    - name: Push
+      run: |
+        git config --global user.name 'GitHub Action'
+        git config --global user.name 'jonskeet@users.noreply.github.com'
+        git -C tmp/gh-pages push origin gh-pages
