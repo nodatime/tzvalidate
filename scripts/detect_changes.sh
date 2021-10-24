@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -ex
+set -e
 RELEASE=$(curl -s https://www.iana.org/time-zones | \
   grep -oP '\<span id="version"\>[A-Za-z0-9]+</span\>'| \
   sed 's/<span id="version">//g' | \
@@ -26,7 +26,7 @@ cd $OUT
 git clone https://github.com/nodatime/tzvalidate.git -q -b gh-pages gh-pages
 ZIPFILE=tzdata$RELEASE-tzvalidate.zip
 HASHFILE=tzdata$RELEASE-sha256.txt
-HASH=`cat tzdata$RELEASE.txt | head -n 5 | grep Body-SHA-256 | cut -d: -f2 | sed 's/ //g'`
+HASH=$(head -n 5 tzdata$RELEASE.txt | grep Body-SHA-256 | cut -d: -f2 | sed 's/ //g')
 zip $ZIPFILE tzdata$RELEASE.txt
 cp $ZIPFILE gh-pages
 
