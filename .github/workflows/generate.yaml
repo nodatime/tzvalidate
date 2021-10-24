@@ -18,4 +18,5 @@ jobs:
     - name: Push
       if: hashFiles('tmp/gh-pages/*') != ''
       run: |
+        git -C tmp/gh-pages remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
         git -C tmp/gh-pages push origin gh-pages
