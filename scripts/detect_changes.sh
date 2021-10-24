@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ex
 RELEASE=$(curl -s https://www.iana.org/time-zones | \
   grep -oP '\<span id="version"\>[A-Za-z0-9]+</span\>'| \
   sed 's/<span id="version">//g' | \

@@ -9,8 +9,8 @@ jobs:
 
     - name: Prep git
       run: |
-        git config --global user.name 'GitHub Action'
-        git config --global user.email 'jonskeet@users.noreply.github.com'
+        git config --global user.name 'GitHub Action for Jon Skeet'
+        git config --global user.email 'skeet@pobox.com'
 
     - name: Generate
       run: scripts/detect_changes.sh
