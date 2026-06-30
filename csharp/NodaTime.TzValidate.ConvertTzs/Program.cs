@@ -62,7 +62,7 @@ namespace NodaTime.TzValidate.ConvertTzs
         {
             string version = null;
             MemoryStream data = null;
-            using (var reader = TarReader.Open(archiveData))
+            using (var reader = TarReader.OpenReader(archiveData))
             {
                 while (reader.MoveToNextEntry())
                 {
