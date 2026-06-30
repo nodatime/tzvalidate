@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Properties/">
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="NodaTime.TzValidate.ConvertTzs/NodaTime.TzValidate.ConvertTzs.csproj" />
+  <Project Path="NodaTime.TzValidate.CoreCommandLine/NodaTime.TzValidate.CoreCommandLine.csproj" />
+  <Project Path="NodaTime.TzValidate.TimeZoneInfoDump/NodaTime.TzValidate.TimeZoneInfoDump.csproj" />
+  <Project Path="NodaTime.TzValidate.TrimNames/NodaTime.TzValidate.TrimNames.csproj" />
+  <Project Path="NodaTime.TzValidate.ZicDump/NodaTime.TzValidate.ZicDump.csproj" />
+</Solution>
