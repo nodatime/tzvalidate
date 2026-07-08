@@ -34,6 +34,7 @@ Data up to 2016d inclusive was generated with the 2016d code.
 After that, the data is generated with the code from the corresponding release.
 
 [//]: # Insert here
+- [2026c](tzdata2026c-tzvalidate.zip): dcb01be22967d44996788b5e7c0bb918c03ccb44a7d9675c40d53089096402ef
 - [2026b](tzdata2026b-tzvalidate.zip): c19183b20f6d0c0d72fb36084aeb030054fdb507dfa2541be8543542adf46c9c
 - [2026a](tzdata2026a-tzvalidate.zip): fc6dc00ed611ab35f5c165a0c529361d796a53582de6cb2c642b0e37ad3930ba
 - [2025c](tzdata2025c-tzvalidate.zip): a33cfb2c08dd5d6fdbdac232d8d4f863fe089b1b815397ebdce52875deaf875b
