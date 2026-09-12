@@ -2,9 +2,8 @@
 
 set -e
 RELEASE=$(curl -s https://www.iana.org/time-zones | \
-  grep -oP '\<span id="version"\>[A-Za-z0-9]+</span\>'| \
-  sed 's/<span id="version">//g' | \
-  sed 's/<\/span>//g')
+  grep -oP '\/time-zones\/releases\/[A-Za-z0-9]+'| \
+  sed 's/\/time-zones\/releases\///g')
 echo "Detected release ${RELEASE} at IANA"
 HTML=$(wget -q -O- https://nodatime.github.io/tzvalidate/)
 MATCH=">${RELEASE}<"
